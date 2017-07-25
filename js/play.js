@@ -5,125 +5,253 @@ create: function() {
   for (let i = 0; i <= (28*8); i++){
     if (i < 28){
       if (!(i > 24)){
-        let p = Math.floor((Math.floor(Math.random()*7))/6);
+        let p = 0;
+        if((Math.round(Math.random)) == 1){
+          p = 0
+        }
+        else{
+          p = 1 +(Math.round(Math.random()));
+        }
         if (p === 0){
           this.bricks.create(i * 33 + 40, 40, 'brick')
           this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
         }
+        else if (p===1){
+          this.bricks.create(i * 33 + 40, 40, 'brick')
+          this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
+          this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+          this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+          this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+          this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky"
+        }
+
         else{
           this.bricks.create(i * 33 + 40, 40, 'brick')
           this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
           this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
           this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
           this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+          this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible"
         }
       }
     }
     else if(i < (28*2)) {
       if(!(i > (28*2 - 3))){
-        let p = Math.floor((Math.floor(Math.random()*7))/6);
+        let p = 0;
+        if((Math.round(Math.random)) == 1){
+          p = 0
+        }
+        else{
+          p = 1 +(Math.round(Math.random()));
+        }
         if (p === 0){
           this.bricks.create(i * 33 + 30 - ((28*1)*33), 40 + (15*1), 'brick')
           this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
         }
+        else if ( p===1 ){
+          this.bricks.create(i * 33 + 30 - ((28*1)*33), 40 + (15*1), 'brick')
+          this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
+          this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+          this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+          this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+          this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky"
+        }
+
         else{
           this.bricks.create(i * 33 + 30 - ((28*1)*33), 40 + (15*1), 'brick')
           this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
           this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
           this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
           this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+          this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible"
         }
     }}
     else if(i < (28*3)) {
-      let p = Math.floor((Math.floor(Math.random()*7))/6);
+      let p = 0;
+      if((Math.round(Math.random)) == 1){
+        p = 0
+      }
+      else{
+        p = 1 +(Math.round(Math.random()));
+      }
       if (p === 0){
         this.bricks.create(i * 33 + 2 - ((28*2)*33), 40 + (15*2), 'brick')
         this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
 
       }
+      else if ( p===1 ){
+        this.bricks.create(i * 33 + 2 - ((28*2)*33), 40 + (15*2), 'brick')
+        this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
+        this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+        this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+        this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+        this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky"
+      }
+
       else{
         this.bricks.create(i * 33 + 2 - ((28*2)*33), 40 + (15*2), 'brick')
         this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
         this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
         this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
         this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+        this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible"
       }
     }
     else if(i < (28*4)) {
-      let p = Math.floor((Math.floor(Math.random()*7))/6);
+      let p = 0;
+      if((Math.round(Math.random)) == 1){
+        p = 0
+      }
+      else{
+        p = 1 +(Math.round(Math.random()));
+      }
       if (p === 0){
         this.bricks.create(i * 33 + 2 - ((28*3)*33), 40 + (15*3), 'brick')
         this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
       }
+      else if ( p===1 ){
+        this.bricks.create(i * 33 + 2 - ((28*3)*33), 40 + (15*3), 'brick')
+        this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
+        this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+        this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+        this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+        this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky"
+      }
+
       else{
         this.bricks.create(i * 33 + 2 - ((28*3)*33), 40 + (15*3), 'brick')
         this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
         this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
         this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
         this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+        this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible"
       }
 
     }
     else if(i < (28*5)) {
-      let p = Math.floor((Math.floor(Math.random()*7))/6);
+      let p = 0;
+      if((Math.round(Math.random)) == 1){
+        p = 0
+      }
+      else{
+        p = 1 +(Math.round(Math.random()));
+      }
       if (p === 0){
         this.bricks.create(i * 33 + 2 - ((28*4)*33), 40 + (15*4), 'brick')
         this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
       }
+      else if ( p===1 ){
+        this.bricks.create(i * 33 + 2 - ((28*4)*33), 40 + (15*4), 'brick')
+        this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
+        this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+        this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+        this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+        this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky"
+      }
+
       else{
         this.bricks.create(i * 33 + 2 - ((28*4)*33), 40 + (15*4), 'brick')
         this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
         this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
         this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
         this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+        this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible"
       }
 
     }
     else if(i < (28*6)) {
-      let p = Math.floor((Math.floor(Math.random()*7))/6);
+      let p = 0;
+      if((Math.round(Math.random)) == 1){
+        p = 0
+      }
+      else{
+        p = 1 +(Math.round(Math.random()));
+      }
       if (p === 0){
         this.bricks.create(i * 33 + 2 - ((28*5)*33), 40 + (15*5), 'brick')
         this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
       }
+      else if ( p===1 ){
+        this.bricks.create(i * 33 + 2 - ((28*5)*33), 40 + (15*5), 'brick')
+        this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
+        this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+        this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+        this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+        this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky"
+      }
+
       else{
         this.bricks.create(i * 33 + 2 - ((28*5)*33), 40 + (15*5), 'brick')
         this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
         this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
         this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
         this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+        this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible"
       }
 
     }
     else if(i < (28*7)) {
       if(!(i > (28*7 - 3))){
-        let p = Math.floor((Math.floor(Math.random()*7))/6);
+        let p = 0;
+        if((Math.round(Math.random)) == 1){
+          p = 0
+        }
+        else{
+          p = 1 +(Math.round(Math.random()));
+        }
         if (p === 0){
           this.bricks.create(i * 33 + 30 - ((28*6)*33), 40 + (15*6), 'brick')
           this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
         }
+        else if ( p===1 ){
+          this.bricks.create(i * 33 + 30 - ((28*6)*33), 40 + (15*6), 'brick')
+          this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
+          this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+          this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+          this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+          this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky"
+        }
+
         else{
           this.bricks.create(i * 33 + 30 - ((28*6)*33), 40 + (15*6), 'brick')
           this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
           this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
           this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
           this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+          this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible"
         }
 
     }}
     else if(i < (28*8)) {
       if(!(i > (28*8 - 4))){
-        let p = Math.floor((Math.floor(Math.random()*7))/6);
+        let p = 0;
+        if((Math.round(Math.random)) == 1){
+          p = 0
+        }
+        else{
+          p = 1 +(Math.round(Math.random()));
+        }
         if (p === 0){
           this.bricks.create(i * 33 + 40 - ((28*7)*33), 40 + (15*7), 'brick')
           this.bricks.children[this.bricks.children.length - 1].type = Math.floor(Math.random()*2)
           this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
         }
+        else if ( p===1 ){
+          this.bricks.create(i * 33 + 40 - ((28*7)*33), 40 + (15*7), 'brick')
+          this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
+          this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+          this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+          this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+          this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky"
+        }
+
         else{
           this.bricks.create(i * 33 + 40 - ((28*7)*33), 40 + (15*7), 'brick')
           this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
           this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
           this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
           this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+          this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible"
         }
     }
   }
@@ -146,13 +274,30 @@ update: function() {
   this.ball.body.velocity.x = this.ball.body.velocity.x || 0
   this.ball.body.velocity.y = this.ball.body.velocity.y || 0
 
+  if(this.player.stick){
+    this.ball.body.velocity.x = 0;
+    this.ball.body.velocity.y = 0;
+    this.ball.position.x = this.ball.position.oldx + this.player.position.x
+    this.ball.position.y = this.player.position.y + 35;
+  }
+
 
   if(this.ball.body.velocity.x == 0 || this.ball.body.velocity.y == 0){
     this.ball.body.velocity.x = 100 + (Math.random() * 100);
     this.ball.body.velocity.y = 270;
   }
   if((Date.now() - this.player.timeOf) >= 5000){
-    this.player.invincible = false;
+    if(this.player.invincible){
+      this.player.invincible = false;
+    }
+    if(this.player.stick){
+      this.player.stick = false;
+      this.player.sticky = false;
+      this.ball.position.oldx = undefined;
+      this.ball.body.velocity.y = this.ball.body.velocity.oldy;
+      this.ball.body.velocity.x = this.ball.body.velocity.oldx;
+      console.log("Not sticky anymore");
+    }
     this.player.timeOf = undefined;
   }
 
@@ -164,17 +309,25 @@ update: function() {
           this.bricks.children[i].powerup.body.velocity.y = 0;
           this.bricks.children[i].powerup.position.y = 0;
           this.bricks.children[i].powerup.position.x = -40;
-          this.player.invincible = true;
+          if(this.bricks.children[i].powerup.type === "invincible"){
+            this.player.invincible = true;
+          }
+          if(this.bricks.children[i].powerup.type === "sticky"){
+            this.player.sticky = true
+            console.log("made sticky");
+            this.ball.body.velocity.oldy = this.ball.body.velocity.y;
+            this.ball.body.velocity.oldx = this.ball.body.velocity.x;
+          }
           this.player.timeOf = Date.now()
         }
     }
       if ((this.ball.position.x + 5 > (this.bricks.children[i].position.x -13)) && (this.ball.position.x-5 < (this.bricks.children[i].position.x + 15)) &&
         (this.ball.position.y + 5 > (this.bricks.children[i].position.y - 3)) && (this.ball.position.y-5 < (this.bricks.children[i].position.y + 3))) {
           if (this.bricks.children[i].powerup !== undefined){
-            this.bricks.children[i].powerup.position.x = this.bricks.children[i].position.x - 8
-            this.bricks.children[i].powerup.position.y = this.bricks.children[i].position.y
-            this.bricks.children[i].powerup.body.velocity.y = 250 + Math.floor(Math.random() * 100)
-            this.bricks.children[i].powerup.visible = true
+              this.bricks.children[i].powerup.position.x = this.bricks.children[i].position.x - 8
+              this.bricks.children[i].powerup.position.y = this.bricks.children[i].position.y
+              this.bricks.children[i].powerup.body.velocity.y = 250 + Math.floor(Math.random() * 100)
+              this.bricks.children[i].powerup.visible = true
           }
           this.bricks.children[i].position.x = -40;
           if (!(this.player.invincible)){
@@ -200,19 +353,36 @@ update: function() {
   if(this.ball.position.y >= 630 && this.ball.position.y < 635 &&
     ((this.player.position.x + 15) < this.ball.position.x) &&
     ((this.player.position.x + 155) > this.ball.position.x)){
-    this.ball.body.velocity.y = -1 * this.ball.body.velocity.y;
-    this.ball.body.velocity.x = ((this.ball.position.x - (this.player.position.x + 70)) * 3)
-    this.ball.position.y -= 10;
+        this.ball.body.velocity.y = -1 * this.ball.body.velocity.y;
+        this.ball.body.velocity.x = ((this.ball.position.x - (this.player.position.x + 70)) * 3)
+        this.ball.position.y -= 10;
+      if(this.player.sticky){
+        this.player.stick = true;
+        this.ball.position.oldx = (this.ball.position.x - (this.player.position.x))
+      }
+
   }
   if (this.ball.position.y < 0){
     this.ball.body.velocity.y = -1 * this.ball.body.velocity.y;
     this.ball.position.y += 10;
   }
+  if(this.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && this.player.stick){
+    if(this.player.invincible){
+      this.player.invincible = false;      
+    }
+    this.player.stick = false;
+    this.player.sticky = false;
+    this.ball.position.oldx = undefined;
+    this.ball.body.velocity.y = this.ball.body.velocity.oldy;
+    this.ball.body.velocity.x = this.ball.body.velocity.oldx;
+
+  }
+
   if (this.keyboard.isDown(Phaser.Keyboard.A) && this.player.position.x > -25){
-    this.player.body.velocity.x = -255;
+    this.player.body.velocity.x = -300;
   }
   else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 815) {
-    this.player.body.velocity.x = 255
+    this.player.body.velocity.x = 300
   }
   else{
     this.player.body.velocity.x = 0;
