@@ -536,7 +536,7 @@ update: function() {
     ((this.player.position.x + 15) < this.ball.position.x) &&
     ((this.player.position.x + 195) > this.ball.position.x))) ||
     (this.player.smallPaddle && (this.ball.position.y >= 630 && this.ball.position.y < 635 &&
-    ((this.player.position.x + 15) < this.ball.position.x) &&
+    ((this.player.position.x + 10) < this.ball.position.x) &&
     ((this.player.position.x + 60) > this.ball.position.x)))) {
         this.ball.body.velocity.y = -1 * this.ball.body.velocity.y;
         if(this.player.bigPaddle === false || this.player.bigPaddle === undefined){
