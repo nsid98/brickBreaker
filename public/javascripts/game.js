@@ -103452,10 +103452,10 @@ process.umask = function() { return 0; };
         if (i < 28) {
           if (!(i > 24)) {
             var p = 0;
-            if (Math.round(Math.random) == 1) {
+            if (!(Math.floor(Math.random() * 4) === 1)) {
               p = 0;
             } else {
-              p = 1 + Math.round(Math.random());
+              p = 1 + Math.floor(Math.random() * 4);
             }
             if (p === 0) {
               this.bricks.create(i * 33 + 40, 40, 'brick');
@@ -103467,22 +103467,36 @@ process.umask = function() { return 0; };
               this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
               this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
               this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky";
-            } else {
+            } else if (p === 2) {
               this.bricks.create(i * 33 + 40, 40, 'brick');
               this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
               this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
               this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
               this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
               this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible";
+            } else if (p === 3) {
+              this.bricks.create(i * 33 + 40, 40, 'brick');
+              this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+              this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+              this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+              this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+              this.bricks.children[this.bricks.children.length - 1].powerup.type = "bigPaddle";
+            } else {
+              this.bricks.create(i * 33 + 40, 40, 'brick');
+              this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+              this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+              this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+              this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+              this.bricks.children[this.bricks.children.length - 1].powerup.type = "smallPaddle";
             }
           }
         } else if (i < 28 * 2) {
           if (!(i > 28 * 2 - 3)) {
             var _p = 0;
-            if (Math.round(Math.random) == 1) {
+            if (!(Math.floor(Math.random() * 4) === 1)) {
               _p = 0;
             } else {
-              _p = 1 + Math.round(Math.random());
+              _p = 1 + Math.floor(Math.random() * 4);
             }
             if (_p === 0) {
               this.bricks.create(i * 33 + 30 - 28 * 1 * 33, 40 + 15 * 1, 'brick');
@@ -103494,21 +103508,35 @@ process.umask = function() { return 0; };
               this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
               this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
               this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky";
-            } else {
+            } else if (_p === 2) {
               this.bricks.create(i * 33 + 30 - 28 * 1 * 33, 40 + 15 * 1, 'brick');
               this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
               this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
               this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
               this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
               this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible";
+            } else if (_p === 3) {
+              this.bricks.create(i * 33 + 30 - 28 * 1 * 33, 40 + 15 * 1, 'brick');
+              this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+              this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+              this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+              this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+              this.bricks.children[this.bricks.children.length - 1].powerup.type = "bigPaddle";
+            } else {
+              this.bricks.create(i * 33 + 30 - 28 * 1 * 33, 40 + 15 * 1, 'brick');
+              this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+              this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+              this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+              this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+              this.bricks.children[this.bricks.children.length - 1].powerup.type = "smallPaddle";
             }
           }
         } else if (i < 28 * 3) {
           var _p2 = 0;
-          if (Math.round(Math.random) == 1) {
+          if (!(Math.floor(Math.random() * 4) === 1)) {
             _p2 = 0;
           } else {
-            _p2 = 1 + Math.round(Math.random());
+            _p2 = 1 + Math.floor(Math.random() * 4);
           }
           if (_p2 === 0) {
             this.bricks.create(i * 33 + 2 - 28 * 2 * 33, 40 + 15 * 2, 'brick');
@@ -103520,20 +103548,34 @@ process.umask = function() { return 0; };
             this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
             this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
             this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky";
-          } else {
+          } else if (_p2 === 2) {
             this.bricks.create(i * 33 + 2 - 28 * 2 * 33, 40 + 15 * 2, 'brick');
             this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
             this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
             this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
             this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
             this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible";
+          } else if (_p2 === 3) {
+            this.bricks.create(i * 33 + 2 - 28 * 2 * 33, 40 + 15 * 2, 'brick');
+            this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+            this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+            this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+            this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+            this.bricks.children[this.bricks.children.length - 1].powerup.type = "bigPaddle";
+          } else {
+            this.bricks.create(i * 33 + 2 - 28 * 2 * 33, 40 + 15 * 2, 'brick');
+            this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+            this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+            this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+            this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+            this.bricks.children[this.bricks.children.length - 1].powerup.type = "smallPaddle";
           }
         } else if (i < 28 * 4) {
           var _p3 = 0;
-          if (Math.round(Math.random) == 1) {
+          if (!(Math.floor(Math.random() * 4) === 1)) {
             _p3 = 0;
           } else {
-            _p3 = 1 + Math.round(Math.random());
+            _p3 = 1 + Math.floor(Math.random() * 4);
           }
           if (_p3 === 0) {
             this.bricks.create(i * 33 + 2 - 28 * 3 * 33, 40 + 15 * 3, 'brick');
@@ -103545,20 +103587,34 @@ process.umask = function() { return 0; };
             this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
             this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
             this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky";
-          } else {
+          } else if (_p3 === 2) {
             this.bricks.create(i * 33 + 2 - 28 * 3 * 33, 40 + 15 * 3, 'brick');
             this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
             this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
             this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
             this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
             this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible";
+          } else if (_p3 === 3) {
+            this.bricks.create(i * 33 + 2 - 28 * 3 * 33, 40 + 15 * 3, 'brick');
+            this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+            this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+            this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+            this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+            this.bricks.children[this.bricks.children.length - 1].powerup.type = "bigPaddle";
+          } else {
+            this.bricks.create(i * 33 + 2 - 28 * 3 * 33, 40 + 15 * 3, 'brick');
+            this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+            this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+            this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+            this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+            this.bricks.children[this.bricks.children.length - 1].powerup.type = "smallPaddle";
           }
         } else if (i < 28 * 5) {
           var _p4 = 0;
-          if (Math.round(Math.random) == 1) {
+          if (!(Math.floor(Math.random() * 4) === 1)) {
             _p4 = 0;
           } else {
-            _p4 = 1 + Math.round(Math.random());
+            _p4 = 1 + Math.floor(Math.random() * 4);
           }
           if (_p4 === 0) {
             this.bricks.create(i * 33 + 2 - 28 * 4 * 33, 40 + 15 * 4, 'brick');
@@ -103570,20 +103626,34 @@ process.umask = function() { return 0; };
             this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
             this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
             this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky";
-          } else {
+          } else if (_p4 === 2) {
             this.bricks.create(i * 33 + 2 - 28 * 4 * 33, 40 + 15 * 4, 'brick');
             this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
             this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
             this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
             this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
             this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible";
+          } else if (_p4 === 3) {
+            this.bricks.create(i * 33 + 2 - 28 * 4 * 33, 40 + 15 * 4, 'brick');
+            this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+            this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+            this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+            this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+            this.bricks.children[this.bricks.children.length - 1].powerup.type = "bigPaddle";
+          } else {
+            this.bricks.create(i * 33 + 2 - 28 * 4 * 33, 40 + 15 * 4, 'brick');
+            this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+            this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+            this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+            this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+            this.bricks.children[this.bricks.children.length - 1].powerup.type = "smallPaddle";
           }
         } else if (i < 28 * 6) {
           var _p5 = 0;
-          if (Math.round(Math.random) == 1) {
+          if (!(Math.floor(Math.random() * 4) === 1)) {
             _p5 = 0;
           } else {
-            _p5 = 1 + Math.round(Math.random());
+            _p5 = 1 + Math.floor(Math.random() * 4);
           }
           if (_p5 === 0) {
             this.bricks.create(i * 33 + 2 - 28 * 5 * 33, 40 + 15 * 5, 'brick');
@@ -103595,21 +103665,35 @@ process.umask = function() { return 0; };
             this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
             this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
             this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky";
-          } else {
+          } else if (_p5 === 2) {
             this.bricks.create(i * 33 + 2 - 28 * 5 * 33, 40 + 15 * 5, 'brick');
             this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
             this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
             this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
             this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
             this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible";
+          } else if (_p5 === 3) {
+            this.bricks.create(i * 33 + 2 - 28 * 5 * 33, 40 + 15 * 5, 'brick');
+            this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+            this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+            this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+            this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+            this.bricks.children[this.bricks.children.length - 1].powerup.type = "bigPaddle";
+          } else {
+            this.bricks.create(i * 33 + 2 - 28 * 5 * 33, 40 + 15 * 5, 'brick');
+            this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+            this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+            this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+            this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+            this.bricks.children[this.bricks.children.length - 1].powerup.type = "smallPaddle";
           }
         } else if (i < 28 * 7) {
           if (!(i > 28 * 7 - 3)) {
             var _p6 = 0;
-            if (Math.round(Math.random) == 1) {
+            if (!(Math.floor(Math.random() * 4) === 1)) {
               _p6 = 0;
             } else {
-              _p6 = 1 + Math.round(Math.random());
+              _p6 = 1 + Math.floor(Math.random() * 4);
             }
             if (_p6 === 0) {
               this.bricks.create(i * 33 + 30 - 28 * 6 * 33, 40 + 15 * 6, 'brick');
@@ -103621,22 +103705,36 @@ process.umask = function() { return 0; };
               this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
               this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
               this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky";
-            } else {
+            } else if (_p6 === 2) {
               this.bricks.create(i * 33 + 30 - 28 * 6 * 33, 40 + 15 * 6, 'brick');
               this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
               this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
               this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
               this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
               this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible";
+            } else if (_p6 === 3) {
+              this.bricks.create(i * 33 + 30 - 28 * 6 * 33, 40 + 15 * 6, 'brick');
+              this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+              this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+              this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+              this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+              this.bricks.children[this.bricks.children.length - 1].powerup.type = "bigPaddle";
+            } else {
+              this.bricks.create(i * 33 + 30 - 28 * 6 * 33, 40 + 15 * 6, 'brick');
+              this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+              this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+              this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+              this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+              this.bricks.children[this.bricks.children.length - 1].powerup.type = "smallPaddle";
             }
           }
         } else if (i < 28 * 8) {
           if (!(i > 28 * 8 - 4)) {
             var _p7 = 0;
-            if (Math.round(Math.random) == 1) {
+            if (!(Math.floor(Math.random() * 4) === 1)) {
               _p7 = 0;
             } else {
-              _p7 = 1 + Math.round(Math.random());
+              _p7 = 1 + Math.floor(Math.random() * 4);
             }
             if (_p7 === 0) {
               this.bricks.create(i * 33 + 40 - 28 * 7 * 33, 40 + 15 * 7, 'brick');
@@ -103649,13 +103747,27 @@ process.umask = function() { return 0; };
               this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
               this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
               this.bricks.children[this.bricks.children.length - 1].powerup.type = "sticky";
-            } else {
+            } else if (_p7 === 2) {
               this.bricks.create(i * 33 + 40 - 28 * 7 * 33, 40 + 15 * 7, 'brick');
               this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
               this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
               this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
               this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
               this.bricks.children[this.bricks.children.length - 1].powerup.type = "invincible";
+            } else if (_p7 === 3) {
+              this.bricks.create(i * 33 + 40 - 28 * 7 * 33, 40 + 15 * 7, 'brick');
+              this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+              this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+              this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+              this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+              this.bricks.children[this.bricks.children.length - 1].powerup.type = "bigPaddle";
+            } else {
+              this.bricks.create(i * 33 + 40 - 28 * 7 * 33, 40 + 15 * 7, 'brick');
+              this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025);
+              this.bricks.children[this.bricks.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+              this.bricks.children[this.bricks.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+              this.bricks.children[this.bricks.children.length - 1].powerup.visible = false;
+              this.bricks.children[this.bricks.children.length - 1].powerup.type = "smallPaddle";
             }
           }
         }
@@ -103699,7 +103811,14 @@ process.umask = function() { return 0; };
           this.ball.position.oldx = undefined;
           this.ball.body.velocity.y = this.ball.body.velocity.oldy;
           this.ball.body.velocity.x = this.ball.body.velocity.oldx;
-          console.log("Not sticky anymore");
+        }
+        if (this.player.bigPaddle) {
+          this.player.scale.x = 1;
+          this.player.bigPaddle = false;
+        }
+        if (this.player.smallPaddle) {
+          this.player.scale.x = 1;
+          this.player.smallPaddle = false;
         }
         this.player.timeOf = undefined;
       }
@@ -103710,14 +103829,59 @@ process.umask = function() { return 0; };
             this.bricks.children[i].powerup.body.velocity.y = 0;
             this.bricks.children[i].powerup.position.y = 0;
             this.bricks.children[i].powerup.position.x = -40;
-            if (this.bricks.children[i].powerup.type === "invincible") {
-              this.player.invincible = true;
+
+            if (this.bricks.children[i].powerup.type === "smallPaddle") {
+              if (this.bricks.children[i].powerup.type === "invincible") {
+                this.player.invincible = false;
+              }
+              if (this.bricks.children[i].powerup.type === "sticky") {
+                this.player.sticky = false;
+                this.player.stick = false;
+              }
+              if (this.bricks.children[i].powerup.type === "bigPaddle") {
+                this.player.bigPaddle = false;
+                this.player.scale.x = 1;
+              }
+              this.player.smallPaddle = true;
+              this.player.scale.x = 0.5;
             }
-            if (this.bricks.children[i].powerup.type === "sticky") {
-              this.player.sticky = true;
-              console.log("made sticky");
-              this.ball.body.velocity.oldy = this.ball.body.velocity.y;
-              this.ball.body.velocity.oldx = this.ball.body.velocity.x;
+
+            if (!this.player.smallPaddle) {
+              if (this.bricks.children[i].powerup.type === "invincible") {
+                if (this.player.stick) {
+                  this.player.sticky = false;
+                  this.player.stick = false;
+                }
+                if (this.player.bigPaddle) {
+                  this.player.bigPaddle = false;
+                  this.player.scale.x = 1;
+                }
+                this.player.invincible = true;
+              }
+              if (this.bricks.children[i].powerup.type === "sticky") {
+                if (this.player.invincible) {
+                  this.player.invincible = false;
+                }
+                if (this.player.bigPaddle) {
+                  this.player.bigPaddle = false;
+                  this.player.scale.x = 1;
+                }
+                this.player.sticky = true;
+                this.ball.body.velocity.oldy = this.ball.body.velocity.y;
+                this.ball.body.velocity.oldx = this.ball.body.velocity.x;
+              }
+              if (this.bricks.children[i].powerup.type === "bigPaddle") {
+                if (this.player.sticky) {
+                  this.player.sticky = false;
+                  this.player.stick = false;
+                }
+                if (this.player.invincible) {
+                  this.player.invincible = false;
+                }
+                this.player.bigPaddle = true;
+                this.player.position.x = this.player.position.x - 15;
+                this.player.scale.x = 1.5;
+              }
             }
             this.player.timeOf = Date.now();
           }
@@ -103740,17 +103904,24 @@ process.umask = function() { return 0; };
         game.state.start('lose');
       }
 
-      if (this.ball.position.x < -5) {
+      if (this.ball.position.x + this.ball.body.velocity.x / 20 < -5) {
         this.ball.body.velocity.x = -1 * this.ball.body.velocity.x;
-        this.ball.position.x += 5;
+        this.ball.position.x += this.ball.body.velocity.x / 20;
       }
-      if (this.ball.position.x > 920) {
+      if (this.ball.position.x + this.ball.body.velocity.x / 20 > 920) {
         this.ball.body.velocity.x = -1 * this.ball.body.velocity.x;
-        this.ball.position.x -= 5;
+        this.ball.position.x -= this.ball.body.velocity.x / 20;
       }
-      if (this.ball.position.y >= 630 && this.ball.position.y < 635 && this.player.position.x + 15 < this.ball.position.x && this.player.position.x + 155 > this.ball.position.x) {
+
+      if (!this.player.smallPaddle && this.ball.position.y >= 630 && this.ball.position.y < 635 && this.player.position.x + 15 < this.ball.position.x && this.player.position.x + 155 > this.ball.position.x || this.player.bigPaddle && this.ball.position.y >= 630 && this.ball.position.y < 635 && this.player.position.x + 15 < this.ball.position.x && this.player.position.x + 195 > this.ball.position.x || this.player.smallPaddle && this.ball.position.y >= 630 && this.ball.position.y < 635 && this.player.position.x + 15 < this.ball.position.x && this.player.position.x + 60 > this.ball.position.x) {
         this.ball.body.velocity.y = -1 * this.ball.body.velocity.y;
-        this.ball.body.velocity.x = (this.ball.position.x - (this.player.position.x + 70)) * 3;
+        if (this.player.bigPaddle === false || this.player.bigPaddle === undefined) {
+          this.ball.body.velocity.x = (this.ball.position.x - (this.player.position.x + 70)) * 3;
+        } else if (this.player.bigPaddle) {
+          this.ball.body.velocity.x = (this.ball.position.x - (this.player.position.x + 100)) * 3;
+        } else if (this.player.smallPaddle) {
+          this.ball.body.velocity.x = (this.ball.position.x - (this.player.position.x + 40)) * 3;
+        }
         this.ball.position.y -= 10;
         if (this.player.sticky) {
           this.player.stick = true;
@@ -103772,12 +103943,44 @@ process.umask = function() { return 0; };
         this.ball.body.velocity.x = this.ball.body.velocity.oldx;
       }
 
-      if (this.keyboard.isDown(Phaser.Keyboard.A) && this.player.position.x > -25) {
-        this.player.body.velocity.x = -300;
-      } else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 815) {
-        this.player.body.velocity.x = 300;
-      } else {
-        this.player.body.velocity.x = 0;
+      var winStateBoolean = true;
+      for (var a = 0; a < this.bricks.length; a = a + 1) {
+        if (this.bricks.children[a].position.x > 0) {
+          winStateBoolean = false;
+        }
+        if (winStateBoolean) {
+          game.start.state('win');
+        }
+      }
+
+      if (this.player.bigPaddle) {
+        if (this.keyboard.isDown(Phaser.Keyboard.A) && this.player.position.x > -35) {
+          this.player.body.velocity.x = -300;
+        } else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 760) {
+          this.player.body.velocity.x = 300;
+        } else {
+          this.player.body.velocity.x = 0;
+        }
+      }
+
+      if (this.player.smallPaddle) {
+        if (this.keyboard.isDown(Phaser.Keyboard.A) && this.player.position.x > -12) {
+          this.player.body.velocity.x = -300;
+        } else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 870) {
+          this.player.body.velocity.x = 300;
+        } else {
+          this.player.body.velocity.x = 0;
+        }
+      }
+
+      if ((this.player.bigPaddle === false || this.player.bigPaddle === undefined) && (this.player.smallPaddle === false || this.player.smallPaddle === undefined)) {
+        if (this.keyboard.isDown(Phaser.Keyboard.A) && this.player.position.x > -25) {
+          this.player.body.velocity.x = -300;
+        } else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 815) {
+          this.player.body.velocity.x = 300;
+        } else {
+          this.player.body.velocity.x = 0;
+        }
       }
     },
 
@@ -103816,7 +104019,7 @@ process.umask = function() { return 0; };
 /* harmony default export */ __webpack_exports__["a"] = (function (game, Phaser) {
   return {
     create: function create() {
-      var nameLabel = game.add.text(80, 80, 'YOU LOSE', { font: '50px Arial', fill: '#ffffff' });
+      var nameLabel = game.add.text(80, 80, 'GAME OVER', { font: '50px Arial', fill: '#ffffff' });
 
       var startLabel = game.add.text(80, game.world.height - 80, 'press the "W" key to restart', { font: '25px Arial', fill: '#ffffff' });
       var wkey = game.input.keyboard.addKey(Phaser.Keyboard.W);
