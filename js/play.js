@@ -515,12 +515,9 @@ update: function() {
       }
   }
 
-
   if(this.ball.position.y > 670){
     game.state.start('lose')
   }
-
-
 
   if (this.ball.position.x + (this.ball.body.velocity.x / 20) < -5){
     this.ball.body.velocity.x = -1 * this.ball.body.velocity.x;
@@ -578,9 +575,9 @@ update: function() {
     if(this.bricks.children[a].position.x > 0){
       winStateBoolean = false;
     }
-    if(winStateBoolean){
-      game.start.state('win')
-    }
+  }
+  if(winStateBoolean){
+    game.state.start('win')
   }
 
   if(this.player.bigPaddle){

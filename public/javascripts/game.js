@@ -103948,9 +103948,9 @@ process.umask = function() { return 0; };
         if (this.bricks.children[a].position.x > 0) {
           winStateBoolean = false;
         }
-        if (winStateBoolean) {
-          game.start.state('win');
-        }
+      }
+      if (winStateBoolean) {
+        game.state.start('win');
       }
 
       if (this.player.bigPaddle) {
