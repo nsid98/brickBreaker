@@ -2259,7 +2259,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
       }
 
-      this.player = game.add.sprite(470, y, 'player');
+      this.player = game.add.sprite(470, 590, 'player');
       this.player.invincible = false;
 
       this.ball = game.add.sprite(470, 400, 'ball');
@@ -111082,6 +111082,8 @@ Backoff.prototype.setJitter = function(jitter){
       var nameLabel = game.add.text(game.world.width / 2 - 130, 20, 'Instructions', { font: '50px Arial', fill: '#ffffff' });
 
       var startLabel = game.add.text(100, 80, 'Use the A and D or left and right arrow keys to move around', { font: '25px Arial', fill: '#ffffff' });
+
+      var startLabel = game.add.text(100, 120, 'Use spacebar to drop a sticky ball ', { font: '25px Arial', fill: '#ffffff' });
 
       var startLabel = game.add.text(280, game.world.height - 100, 'To go back to Home Screen, hit H', { font: '25px Arial', fill: '#ffffff' });
 

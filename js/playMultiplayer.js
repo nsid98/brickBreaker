@@ -386,7 +386,7 @@ create: function() {
   }
   }
 
-  this.player = game.add.sprite(470, y, 'player');
+  this.player = game.add.sprite(470, 590, 'player');
   this.player.invincible = false;
 
   this.ball = game.add.sprite(470, 400, 'ball');
