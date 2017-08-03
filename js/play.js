@@ -531,7 +531,7 @@ update: function() {
 
   if((!(this.player.smallPaddle) && (this.ball.position.y >= 630 && this.ball.position.y < 635 &&
     ((this.player.position.x + 15) < this.ball.position.x) &&
-    ((this.player.position.x + 155) > this.ball.position.x))) ||
+    ((this.player.position.x + 145) > this.ball.position.x))) ||
     (this.player.bigPaddle && (this.ball.position.y >= 630 && this.ball.position.y < 635 &&
     ((this.player.position.x + 15) < this.ball.position.x) &&
     ((this.player.position.x + 195) > this.ball.position.x))) ||
@@ -539,14 +539,14 @@ update: function() {
     ((this.player.position.x + 10) < this.ball.position.x) &&
     ((this.player.position.x + 60) > this.ball.position.x)))) {
         this.ball.body.velocity.y = -1 * this.ball.body.velocity.y;
-        if(this.player.bigPaddle === false || this.player.bigPaddle === undefined){
+        if(this.player.bigPaddle === false || this.player.bigPaddle === undefined && (this.player.smallPaddle === false || this.player.smallPaddle === undefined)){
           this.ball.body.velocity.x = ((this.ball.position.x - (this.player.position.x + 70)) * 3)
         }
         else if(this.player.bigPaddle){
           this.ball.body.velocity.x = ((this.ball.position.x - (this.player.position.x + 100)) * 3)
         }
         else if(this.player.smallPaddle){
-          this.ball.body.velocity.x = ((this.ball.position.x - (this.player.position.x + 40)) * 3)
+          this.ball.body.velocity.x = ((this.ball.position.x - (this.player.position.x + 30)) * 3)
         }
         this.ball.position.y -= 10;
       if(this.player.sticky){
@@ -581,10 +581,10 @@ update: function() {
   }
 
   if(this.player.bigPaddle){
-    if (this.keyboard.isDown(Phaser.Keyboard.A) && this.player.position.x > -35){
+    if ((this.keyboard.isDown(Phaser.Keyboard.A) || this.keyboard.isDown(Phaser.Keyboard.LEFT)) && this.player.position.x > -35){
       this.player.body.velocity.x = -300;
     }
-    else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 760) {
+    else if ((this.keyboard.isDown(Phaser.Keyboard.D) || this.keyboard.isDown(Phaser.Keyboard.RIGHT)) && this.player.position.x < 760) {
       this.player.body.velocity.x = 300
     }
     else{
@@ -593,10 +593,10 @@ update: function() {
   }
 
   if(this.player.smallPaddle){
-    if (this.keyboard.isDown(Phaser.Keyboard.A) && this.player.position.x > -12){
+    if ((this.keyboard.isDown(Phaser.Keyboard.A) || this.keyboard.isDown(Phaser.Keyboard.LEFT)) && this.player.position.x > -8){
       this.player.body.velocity.x = -300;
     }
-    else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 870) {
+    else if ((this.keyboard.isDown(Phaser.Keyboard.D) || this.keyboard.isDown(Phaser.Keyboard.RIGHT)) && this.player.position.x < 870) {
       this.player.body.velocity.x = 300
     }
     else{
@@ -605,10 +605,10 @@ update: function() {
   }
 
 if((this.player.bigPaddle === false || this.player.bigPaddle === undefined) && (this.player.smallPaddle === false || this.player.smallPaddle === undefined)){
-  if (this.keyboard.isDown(Phaser.Keyboard.A) && this.player.position.x > -25){
+  if ((this.keyboard.isDown(Phaser.Keyboard.A) || this.keyboard.isDown(Phaser.Keyboard.LEFT)) && this.player.position.x > -25){
     this.player.body.velocity.x = -300;
   }
-  else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 815) {
+  else if ((this.keyboard.isDown(Phaser.Keyboard.D) || this.keyboard.isDown(Phaser.Keyboard.RIGHT)) && this.player.position.x < 815) {
     this.player.body.velocity.x = 300
   }
   else{
