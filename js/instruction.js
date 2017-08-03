@@ -9,7 +9,7 @@ export default (game, Phaser) => ({
   var startLabel = game.add.text(100, 80, 'Use the A and D or left and right arrow keys to move around',
 {font: '25px Arial', fill: '#ffffff'})
 
-var startLabel = game.add.text(100, 120, 'Use spacebar to drop a sticky ball ',
+var startLabel = game.add.text(100, 120, 'Use spacebar to release a sticky ball ',
 {font: '25px Arial', fill: '#ffffff'})
 
   var startLabel = game.add.text(280, game.world.height - 100, 'To go back to Home Screen, hit H',
