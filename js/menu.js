@@ -1,3 +1,4 @@
+const socket = io()
 export default (game, Phaser) => ({
   create: function () {
     const homeScreen = game.add.sprite(0, 0, 'homeScreen');
@@ -34,7 +35,9 @@ singlePlayer: function() {
 },
 
 multiPlayer: function(){
-  game.state.start('playMultiplayer')
+  socket.emit('MultiplayerStart')
+  // game.state.start('playMultiplayer')
+  console.log("End of multiPlayer game.state.start");
 },
 
 instruction: function(){

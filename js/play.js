@@ -413,6 +413,7 @@ update: function() {
     this.ball.body.velocity.x = 100 + (Math.random() * 100);
     this.ball.body.velocity.y = 270;
   }
+
   if((Date.now() - this.player.timeOf) >= 5000){
     if(this.player.invincible){
       this.player.invincible = false;

@@ -8,7 +8,6 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
-
 var app = express();
 var debug = require('debug')('game:server');
 var http = require('http');
@@ -25,13 +24,43 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-var io = require('socket.io')(server);
+var io = require('socket.io').listen(server);
 
+// const socket = io()
+// const io = require('socket.io').listen(server);
+let player1 = "bottomSide"
+let player2 = "topSide"
+
+let counter = 0
 io.on('connection', function (socket) {
-  socket.emit('CreateNewPlayer');
-  // socket.on('my other event', function () {
-  //   console.log(this);
-  // });
+
+  console.log("io.on in app.js works" + socket.id);
+  let playerList = []
+  socket.on('MultiplayerStart', function(){
+  if(counter == 0){
+    // socket.emit('CreateBottomPlayer');
+    playerList.push(player1)
+    counter ++
+    console.log("socket.on in app.js works player 1" +  playerList[playerList.length - 1]);
+    io.emit('join',socket.id)
+
+    // socket.broadcast.emit('join', playerList[playerList.length - 1])
+    // io.emit('join', 'test')
+
+    console.log("socket.on in app.js works player 1 AFTER EMIT");
+
+  }
+
+  else if(counter == 1){
+    // socket.emit('CreateTopPlayer')
+    playerList.push(player2)
+    counter ++
+    console.log("socket.on in app.js works player 2" + playerList[playerList.length - 1]);
+    socket.emit('join', playerList[playerList.length - 1])
+  }
+
+}
+)
 });
 
 

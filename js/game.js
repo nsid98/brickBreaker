@@ -6,7 +6,7 @@ import playState from './play';
 import playMultiplayerState from './playMultiplayer';
 import winState from './win';
 import loseState from './lose';
-import client from './client';
+import clientState from './client';
 import instructionState from './instruction'
 
 
@@ -21,5 +21,7 @@ game.state.add('playMultiplayer', playMultiplayerState(game, Phaser));
 game.state.add('win', winState(game, Phaser));
 game.state.add('lose', loseState(game, Phaser));
 game.state.add('instruction', instructionState(game, Phaser));
+game.state.add('client', clientState(game, Phaser));
+
 
 game.state.start('boot')

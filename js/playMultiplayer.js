@@ -385,9 +385,24 @@ create: function() {
     }
   }
   }
+  console.log(" this.game.state" + this.game.state);
+  console.log(" this.game.state.states['playMultiplayer'] " + this.game.state.states['playMultiplayer']);
+  console.log(" this.game.state.states['playMultiplayer']._side " + this.game.state.states['playMultiplayer']._side);
+  // debugger;
+  if(this.game.state.states['playMultiplayer']._side == "bottomSide"){
+    console.log("reached playMultiplayer createBottomPlayer");
+    this.createBottomPlayer()
+    console.log("Finished playMultiplayer createBottomPlayer");
 
-  this.player = game.add.sprite(470, 590, 'player');
-  this.player.invincible = false;
+  }
+  if(this.game.state.states['playMultiplayer']._side == "topSide"){
+    console.log("reached playMultiplayer createTopPlayer");
+    this.createTopPlayer()
+    console.log("finished playMultiplayer createBottomPlayer");
+
+  }
+  // this.player = game.add.sprite(470, 590, 'player');
+  // this.player.invincible = false;
 
   this.ball = game.add.sprite(470, 400, 'ball');
   this.ball.scale.setTo(0.07, 0.07);
@@ -399,6 +414,16 @@ create: function() {
     }
   }
   game.physics.enable(this.player, Phaser.Physics.ARCADE);
+},
+
+createBottomPlayer: function(){
+this.player = game.add.sprite(470, 590, 'player');
+this.player.invincible = false;
+},
+
+createTopPlayer: function(){
+this.player = game.add.sprite(470, 20, 'player');
+this.player.invincible = false;
 },
 
 update: function() {
