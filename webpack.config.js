@@ -1,5 +1,6 @@
 module.exports = {
       entry: './js/game.js',
+      devtool: '#eval-source-map',
       output: {
         filename: './public/javascripts/game.js'
       },

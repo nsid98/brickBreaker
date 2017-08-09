@@ -1,4 +1,4 @@
-const socket = io()
+window.socket = io()
 export default (game, Phaser) => ({
   create: function () {
     const homeScreen = game.add.sprite(0, 0, 'homeScreen');
