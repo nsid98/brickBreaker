@@ -900,12 +900,12 @@ export default (game, Phaser) => ({
 
       updateBall: function(ball, player, bricks){
         if(ball.body.velocity.x == 0 || ball.body.velocity.y == 0){
-          ball.body.velocity.x = 0 + (Math.random() * 0);
+          ball.body.velocity.x = 100 + (Math.random() * 100);
           if(this.game.state.states['playMultiplayer']._side != "topSide"){
-            ball.body.velocity.y = 70;
+            ball.body.velocity.y = 270;
           }
           else{
-            ball.body.velocity.y = -70;
+            ball.body.velocity.y = -270;
           }
         }
 
