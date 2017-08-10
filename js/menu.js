@@ -36,8 +36,6 @@ singlePlayer: function() {
 
 multiPlayer: function(){
   socket.emit('MultiplayerStart')
-  // game.state.start('playMultiplayer')
-  console.log("End of multiPlayer game.state.start");
 },
 
 instruction: function(){

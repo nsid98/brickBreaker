@@ -345,7 +345,6 @@ create: function() {
         }
         if (p === 0){
           this.bricks.create(i * 33 + 40 - ((28*7)*33), 40 + (15*7), 'brick')
-          this.bricks.children[this.bricks.children.length - 1].type = Math.floor(Math.random()*2)
           this.bricks.children[this.bricks.children.length - 1].scale.setTo(0.04, 0.025)
         }
         else if ( p===1 ){

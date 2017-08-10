@@ -53,20 +53,24 @@ io.on('connection', function (socket) {
       socket.emit('join', playerList[playerList.length - 1])
     }
   })
+
   socket.on('updatePlayer', function(data){
     socket.broadcast.emit('updatePlayerToClient', data)
   })
+
   socket.on('updateBallToServer', function(data){
     socket.broadcast.emit('updateBall', data)
+  })
+
+  socket.on('updateBrickToServer', function(data){
+    console.log("It got to updateBricksToServer in app.js   " + data);
+    socket.broadcast.emit('updateBricks', data)
   })
 
   socket.on('disconnect', function(socket){
     playerList.splice(-1)
   });
 })
-
-
-
 
 
 /**
