@@ -40,13 +40,13 @@ io.on('connection', function (socket) {
 
   let playerList = []
   socket.on('MultiplayerStart', function(){
-    if(counter == 0){
+    if(counter % 2 == 0){
       socket.emit('CreateBottomPlayer');
       playerList.push(player1)
       counter ++
       socket.emit('join', playerList[playerList.length - 1])
 
-    } else if(counter == 1) {
+    } else if(counter % 2 == 1) {
       socket.emit('CreateTopPlayer')
       playerList.push(player2)
       counter ++
