@@ -33,9 +33,6 @@ let player1 = "bottomSide"
 let player2 = "topSide"
 
 let counter = 0
-
-console.log("before io.on in app.js works");
-
 io.on('connection', function (socket) {
 
   console.log("io.on in app.js works  " + socket.id);
@@ -47,24 +44,28 @@ io.on('connection', function (socket) {
       socket.emit('CreateBottomPlayer');
       playerList.push(player1)
       counter ++
-      console.log("socket.on in app.js works player 1" +  playerList[playerList.length - 1]);
       socket.emit('join', playerList[playerList.length - 1])
 
-      console.log("socket.on in app.js works player 1 AFTER EMIT");
     } else if(counter == 1) {
       socket.emit('CreateTopPlayer')
       playerList.push(player2)
       counter ++
       socket.emit('join', playerList[playerList.length - 1])
-
-      console.log("socket.on in app.js works player 2" + playerList[playerList.length - 1]);
     }
+  })
+  socket.on('updatePlayer', function(data){
+    socket.broadcast.emit('updatePlayerToClient', data)
+  })
+  socket.on('updateBallToServer', function(data){
+    socket.broadcast.emit('updateBall', data)
   })
 
   socket.on('disconnect', function(socket){
     playerList.splice(-1)
   });
 })
+
+
 
 
 
