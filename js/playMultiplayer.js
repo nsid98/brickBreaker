@@ -20,19 +20,23 @@ export default (game, Phaser) => ({
     }))
 
     socket.on('updateBall', ((data) =>{
-      if(socket.id != data[0].id){
-        let ball = null;
-        if(this.game.state.states['playMultiplayer']._side != "topSide"){
-          ball = this.otherBall
-        }
-        else{
-          ball = this.ball
-        }
+      // if(socket.id != data[0].id){
+      //   let ball = null;
+      //   if(this.game.state.states['playMultiplayer']._side != "topSide"){
+      //     ball = this.otherBall
+      //   }
+      //   else{
+      //     ball = this.ball
+      //   }
+        let ball = this.balls.children[data[0].index]
         ball.position.x = data[0].x;
         ball.position.y = data[0].y;
         ball.body.velocity.x = data[0].vx;
         ball.body.velocity.y = data[0].vy;
-    }}))
+      }
+    // }
+  // }
+))
 
     socket.on('updateBricks', ((data) =>{
         this.bricks1.children[data[0].index].position.x = -40
@@ -949,27 +953,27 @@ export default (game, Phaser) => ({
           }
 
 
-          for(let i = 0; i < bricks.children.length; i++){
-            if ((ball.position.x + 5 > (bricks.children[i].position.x -13)) && (ball.position.x-5 < (bricks.children[i].position.x + 15)) &&
-                    (ball.position.y + 5 > (bricks.children[i].position.y - 5)) && (ball.position.y-5 < (bricks.children[i].position.y + 5))) {
-                if (bricks.children[i].powerup !== undefined){
-                    bricks.children[i].powerup.position.x = bricks.children[i].position.x - 8
-                    bricks.children[i].powerup.position.y = bricks.children[i].position.y
-                    bricks.children[i].powerup.body.velocity.y = 250 + Math.floor(Math.random() * 100)
-                    bricks.children[i].powerup.visible = true
+          for(let j = 0; j < bricks.children.length; j++){
+            if ((ball.position.x + 5 > (bricks.children[j].position.x -13)) && (ball.position.x-5 < (bricks.children[j].position.x + 15)) &&
+                    (ball.position.y + 5 > (bricks.children[j].position.y - 5)) && (ball.position.y-5 < (bricks.children[j].position.y + 5))) {
+                if (bricks.children[j].powerup !== undefined){
+                    bricks.children[j].powerup.position.x = bricks.children[j].position.x - 8
+                    bricks.children[j].powerup.position.y = bricks.children[j].position.y
+                    bricks.children[j].powerup.body.velocity.y = 250 + Math.floor(Math.random() * 100)
+                    bricks.children[j].powerup.visible = true
                 }
-                this.bricks1.children[i].position.x = -40;
-                this.bricks2.children[i].position.x = -40;
+                this.bricks1.children[j].position.x = -40;
+                this.bricks2.children[j].position.x = -40;
 
 
                 if (!(player.invincible)){
                   ball.body.velocity.y = ball.body.velocity.y * -1
                 }
-                socket.emit('updateBrickToServer', [{index: i, id: socket.id}])
+                socket.emit('updateBrickToServer', [{index: j, id: socket.id}])
 
             }
         }
-        socket.emit('updateBallToServer', [{x: ball.position.x, y: ball.position.y, vx: ball.body.velocity.x, vy: ball.body.velocity.y, id: socket.id}])
+        socket.emit('updateBallToServer', [{index: i, x: ball.position.x, y: ball.position.y, vx: ball.body.velocity.x, vy: ball.body.velocity.y, id: socket.id}])
 
       }
       }
