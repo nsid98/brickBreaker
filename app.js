@@ -35,9 +35,6 @@ let player2 = "topSide"
 let counter = 0
 io.on('connection', function (socket) {
 
-  console.log("io.on in app.js works  " + socket.id);
-
-
   let playerList = []
   socket.on('MultiplayerStart', function(){
     if(counter % 2 == 0){
@@ -63,7 +60,6 @@ io.on('connection', function (socket) {
   })
 
   socket.on('updateBrickToServer', function(data){
-    console.log("It got to updateBricksToServer in app.js   " + data);
     socket.broadcast.emit('updateBricks', data)
   })
 

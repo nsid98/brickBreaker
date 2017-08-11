@@ -1,4 +1,3 @@
-// MainState.prototype = {
 export default (game, Phaser) => ({
   create: function() {
     this.keyboard = game.input.keyboard;
@@ -45,18 +44,19 @@ export default (game, Phaser) => ({
   },
 
       createPlayers: function(){
+        this.balls = game.add.group()
         this.player = game.add.sprite(470, 590, 'player');
         this.player.invincible = false;
-        this.ball = game.add.sprite(470, 400, 'ball');
-        this.ball.scale.setTo(0.07, 0.07);
-        game.physics.enable(this.player, Phaser.Physics.ARCADE);
-        game.physics.enable(this.ball, Phaser.Physics.ARCADE);
         this.otherPlayer = game.add.sprite(470, -50, 'player');
         this.otherPlayer.invincible = false;
-        this.otherBall = game.add.sprite(470, 200, 'ball');
-        this.otherBall.scale.setTo(0.07, 0.07);
         game.physics.enable(this.otherPlayer, Phaser.Physics.ARCADE);
-        game.physics.enable(this.otherBall, Phaser.Physics.ARCADE);
+        game.physics.enable(this.player, Phaser.Physics.ARCADE);
+
+        this.balls.create(470, 400, 'ball');
+        this.balls.children[0].scale.setTo(0.07, 0.07);
+        this.balls.create(470, 200, 'ball');
+        this.balls.children[1].scale.setTo(0.07, 0.07);
+        game.physics.enable(this.balls, Phaser.Physics.ARCADE);
       },
 
       createBricks: function(){
@@ -846,11 +846,11 @@ export default (game, Phaser) => ({
         if(this.player != null && this.otherPlayer != null){
           if(this.game.state.states['playMultiplayer']._side == "topSide"){
             this.movePaddle(this.otherPlayer)
-            this.updateBall(this.otherBall, this.otherPlayer, this.bricks2)
+            this.updateBall(this.balls, this.otherPlayer, this.bricks2)
           }
           else{
             this.movePaddle(this.player)
-            this.updateBall(this.ball, this.player, this.bricks1)
+            this.updateBall(this.balls, this.player, this.bricks1)
           }
         }
       },
@@ -898,10 +898,13 @@ export default (game, Phaser) => ({
         socket.emit('updatePlayer', [{x: player.position.x, y: player.position.y, vx: player.body.velocity.x, vy: player.body.velocity.y, id: socket.id}])
       },
 
-      updateBall: function(ball, player, bricks){
+      updateBall: function(balls, player, bricks){
+        let ball = null
+        for(let i = 0; i < balls.children.length; i ++){
+          ball = balls.children[i]
         if(ball.body.velocity.x == 0 || ball.body.velocity.y == 0){
           ball.body.velocity.x = 100 + (Math.random() * 100);
-          if(this.game.state.states['playMultiplayer']._side != "topSide"){
+          if(player.position.y > 400){
             ball.body.velocity.y = 270;
           }
           else{
@@ -917,13 +920,14 @@ export default (game, Phaser) => ({
           ball.body.velocity.x = -1 * ball.body.velocity.x;
           ball.position.x -= (ball.body.velocity.x / 20)
         }
-        if((!(player.smallPaddle) && ((ball.position.y >= 630 && ball.position.y < 635) || (ball.position.y >= 10 && ball.position.y < 15) &&
+
+        if((!(player.smallPaddle) && !(player.bigPaddle) && ((player.position.y > 400 && (ball.position.y >= 630 && ball.position.y < 635)) || (player.position.y < 60 && (ball.position.y >= 10 && ball.position.y < 15))) &&
             ((player.position.x + 15) < ball.position.x) &&
-            ((player.position.x + 145) > ball.position.x))) ||
+            ((player.position.x + 145) > ball.position.x)) ||
             (player.bigPaddle && ((ball.position.y >= 630 && ball.position.y < 635) || (ball.position.y >= 10 && ball.position.y < 15) &&
             ((player.position.x + 15) < ball.position.x) &&
             ((player.position.x + 195) > ball.position.x))) ||
-            (player.smallPaddle && ((ball.position.y >= 630 && ball.position.y < 635) || (ball.position.y >= 10 && ball.position.y < 15) &&
+            (player.smallPaddle && ((ball.position.y >= 630 && ball.position.y < 635) || (ball.position.y >= 10 && ball.position.y < 20) &&
             ((player.position.x + 10) < ball.position.x) &&
             ((player.position.x + 60) > ball.position.x)))) {
                 ball.body.velocity.y = -1 * ball.body.velocity.y;
@@ -947,7 +951,7 @@ export default (game, Phaser) => ({
 
           for(let i = 0; i < bricks.children.length; i++){
             if ((ball.position.x + 5 > (bricks.children[i].position.x -13)) && (ball.position.x-5 < (bricks.children[i].position.x + 15)) &&
-                    (ball.position.y + 5 > (bricks.children[i].position.y - 3)) && (ball.position.y-5 < (bricks.children[i].position.y + 3))) {
+                    (ball.position.y + 5 > (bricks.children[i].position.y - 5)) && (ball.position.y-5 < (bricks.children[i].position.y + 5))) {
                 if (bricks.children[i].powerup !== undefined){
                     bricks.children[i].powerup.position.x = bricks.children[i].position.x - 8
                     bricks.children[i].powerup.position.y = bricks.children[i].position.y
@@ -967,6 +971,7 @@ export default (game, Phaser) => ({
         }
         socket.emit('updateBallToServer', [{x: ball.position.x, y: ball.position.y, vx: ball.body.velocity.x, vy: ball.body.velocity.y, id: socket.id}])
 
+      }
       }
     })
 
