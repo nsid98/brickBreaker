@@ -20,22 +20,14 @@ export default (game, Phaser) => ({
     }))
 
     socket.on('updateBall', ((data) =>{
-      // if(socket.id != data[0].id){
-      //   let ball = null;
-      //   if(this.game.state.states['playMultiplayer']._side != "topSide"){
-      //     ball = this.otherBall
-      //   }
-      //   else{
-      //     ball = this.ball
-      //   }
+      if(this.balls.children[data[0].index].position.y > game.height){
         let ball = this.balls.children[data[0].index]
         ball.position.x = data[0].x;
         ball.position.y = data[0].y;
         ball.body.velocity.x = data[0].vx;
         ball.body.velocity.y = data[0].vy;
       }
-    // }
-  // }
+    }
 ))
 
     socket.on('updateBricks', ((data) =>{
