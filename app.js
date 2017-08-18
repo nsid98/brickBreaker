@@ -62,6 +62,13 @@ io.on('connection', function (socket) {
   socket.on('updateBrickToServer', function(data){
     socket.broadcast.emit('updateBricks', data)
   })
+  socket.on('updatePowerupActivationToServer', function(data){
+    socket.broadcast.emit('updatePowerups', data)
+  })
+
+  socket.on('sendBrickToServer', function(data){
+    socket.broadcast.emit('sendBrick', data)
+  })
 
   socket.on('disconnect', function(socket){
     playerList.splice(-1)

@@ -1,8 +1,6 @@
 export default (game, Phaser) => ({
   create: function() {
     this.keyboard = game.input.keyboard;
-    this.bricks = game.add.group()
-
     socket.on('updatePlayerToClient', ((data)=>{
       if(socket.id != data[0].id){
         let player = null;
@@ -20,15 +18,32 @@ export default (game, Phaser) => ({
     }))
 
     socket.on('updateBall', ((data) =>{
-      if(this.balls.children[data[0].index].position.y > game.height){
-        let ball = this.balls.children[data[0].index]
-        ball.position.x = data[0].x;
-        ball.position.y = data[0].y;
-        ball.body.velocity.x = data[0].vx;
-        ball.body.velocity.y = data[0].vy;
+      if(this.game.state.states['playMultiplayer']._side == "topSide" && this.balls.children[data[0].index].position.y > game.height){
+          let ball = this.balls.children[data[0].index]
+          ball.position.x = data[0].x;
+          ball.position.y = data[0].y;
+          ball.body.velocity.x = data[0].vx;
+          ball.body.velocity.y = data[0].vy;
+
       }
-    }
-))
+      if(this.game.state.states['playMultiplayer']._side != "topSide" && this.balls.children[data[0].index].position.y <= game.height){
+          let ball = this.balls.children[data[0].index]
+          ball.position.x = data[0].x;
+          ball.position.y = data[0].y;
+          ball.body.velocity.x = data[0].vx;
+          ball.body.velocity.y = data[0].vy;
+      }
+    }))
+
+    socket.on('updatePowerups', ((data) =>{
+        let powerup = this.bricks1.children[data[0].index].powerup
+      if(socket.id != data[0].id){
+        powerup.position.x = data[0].brickx
+        powerup.position.y = data[0].bricky
+        powerup.body.velocity.y =(250 + Math.floor(Math.random() * 100)) * data[0].direction
+        powerup.visible = true
+      }
+    }))
 
     socket.on('updateBricks', ((data) =>{
         this.bricks1.children[data[0].index].position.x = -40
@@ -36,7 +51,22 @@ export default (game, Phaser) => ({
 
     }))
     this.createPlayers()
-    this.createBricks()
+
+    if(this.game.state.states['playMultiplayer']._side != "topSide"){
+      this.createBricks()
+    }
+    if(this.game.state.states['playMultiplayer']._side === "topSide"){
+      this.bricks1 = game.add.group()
+      this.bricks2 = game.add.group()
+
+      socket.on('sendBrick', ((data)=> {
+        if(data[0].key === "1"){
+          this.bricks1.add
+
+        }
+      }))
+
+    }
   },
 
       createPlayers: function(){
@@ -57,6 +87,7 @@ export default (game, Phaser) => ({
 
       createBricks: function(){
         this.bricks1 = game.add.group()
+        this.bricks2 = game.add.group()
         for (let i = 0; i <= (28*8); i++){
           if (i < 28){
             if (!(i > 24)){
@@ -70,6 +101,9 @@ export default (game, Phaser) => ({
               if (p === 0){
                 this.bricks1.create(i * 33 + 40, 250, 'brick')
                 this.bricks1.children[this.bricks1.children.length - 1].scale.setTo(0.04, 0.025)
+
+                this.bricks2.create(i * 33 + 40, 250, 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
               }
               else if (p===1){
                 this.bricks1.create(i * 33 + 40, 250, 'brick')
@@ -78,6 +112,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "sticky"
+
+                this.bricks2.create(i * 33 + 40, 250, 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
               }
               else if (p===2){
                 this.bricks1.create(i * 33 + 40, 250, 'brick')
@@ -86,6 +127,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "invincible"
+
+                this.bricks2.create(i * 33 + 40, 250, 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
               }
               else if(p ===3){
                 this.bricks1.create(i * 33 + 40, 250, 'brick')
@@ -94,6 +142,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "bigPaddle"
+
+                this.bricks2.create(i * 33 + 40, 250, 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
               }
               else{
                 this.bricks1.create(i * 33 + 40, 250, 'brick')
@@ -102,6 +157,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "smallPaddle"
+
+                this.bricks2.create(i * 33 + 40, 250, 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
               }
             }
           }
@@ -117,6 +179,8 @@ export default (game, Phaser) => ({
               if (p === 0){
                 this.bricks1.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
                 this.bricks1.children[this.bricks1.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
               }
               else if ( p===1 ){
                 this.bricks1.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
@@ -125,6 +189,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "sticky"
+
+                this.bricks2.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
               }
 
               else if (p === 2){
@@ -134,6 +205,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "invincible"
+
+                this.bricks2.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
               }
               else if (p === 3){
                 this.bricks1.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
@@ -142,6 +220,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "bigPaddle"
+
+                this.bricks2.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
               }
               else {
                 this.bricks1.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
@@ -150,6 +235,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "smallPaddle"
+
+                this.bricks2.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
               }
             }}
             else if(i < (28*3)) {
@@ -164,6 +256,8 @@ export default (game, Phaser) => ({
                 this.bricks1.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
                 this.bricks1.children[this.bricks1.children.length - 1].scale.setTo(0.04, 0.025)
 
+                this.bricks2.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
               }
               else if ( p===1 ){
                 this.bricks1.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
@@ -172,6 +266,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "sticky"
+
+                this.bricks2.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
               }
 
               else if (p===2){
@@ -181,6 +282,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "invincible"
+
+                this.bricks2.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
               }
               else if (p === 3){
                 this.bricks1.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
@@ -189,6 +297,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "bigPaddle"
+
+                this.bricks2.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
               }
               else{
                 this.bricks1.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
@@ -197,6 +312,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "smallPaddle"
+
+                this.bricks2.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
               }
             }
             else if(i < (28*4)) {
@@ -210,6 +332,9 @@ export default (game, Phaser) => ({
               if (p === 0){
                 this.bricks1.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
                 this.bricks1.children[this.bricks1.children.length - 1].scale.setTo(0.04, 0.025)
+
+                this.bricks2.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
               }
               else if ( p===1 ){
                 this.bricks1.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
@@ -218,6 +343,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "sticky"
+
+                this.bricks2.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
               }
 
               else if (p === 2){
@@ -227,6 +359,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "invincible"
+
+                this.bricks2.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
               }
               else if (p === 3){
                 this.bricks1.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
@@ -235,6 +374,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "bigPaddle"
+
+                this.bricks2.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
               }
               else {
                 this.bricks1.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
@@ -243,6 +389,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "smallPaddle"
+
+                this.bricks2.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
               }
 
             }
@@ -257,6 +410,9 @@ export default (game, Phaser) => ({
               if (p === 0){
                 this.bricks1.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
                 this.bricks1.children[this.bricks1.children.length - 1].scale.setTo(0.04, 0.025)
+
+                this.bricks2.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
               }
               else if ( p===1 ){
                 this.bricks1.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
@@ -265,6 +421,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "sticky"
+
+                this.bricks2.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
               }
 
               else if(p===2){
@@ -274,6 +437,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "invincible"
+
+                this.bricks2.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
               }
               else if (p === 3){
                 this.bricks1.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
@@ -282,6 +452,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "bigPaddle"
+
+                this.bricks2.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
               }
               else{
                 this.bricks1.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
@@ -290,6 +467,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "smallPaddle"
+
+                this.bricks2.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
               }
 
 
@@ -305,6 +489,9 @@ export default (game, Phaser) => ({
               if (p === 0){
                 this.bricks1.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
                 this.bricks1.children[this.bricks1.children.length - 1].scale.setTo(0.04, 0.025)
+
+                this.bricks2.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
               }
               else if ( p===1 ){
                 this.bricks1.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
@@ -313,6 +500,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "sticky"
+
+                this.bricks2.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
               }
 
               else if(p === 2){
@@ -322,6 +516,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "invincible"
+
+                this.bricks2.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
               }
               else if(p === 3){
                 this.bricks1.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
@@ -330,6 +531,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "bigPaddle"
+
+                this.bricks2.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
               }
               else{
                 this.bricks1.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
@@ -338,6 +546,13 @@ export default (game, Phaser) => ({
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                 this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "smallPaddle"
+
+                this.bricks2.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
+                this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
               }
 
             }
@@ -353,6 +568,9 @@ export default (game, Phaser) => ({
                 if (p === 0){
                   this.bricks1.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
                   this.bricks1.children[this.bricks1.children.length - 1].scale.setTo(0.04, 0.025)
+
+                  this.bricks2.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
+                  this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
                 }
                 else if ( p===1 ){
                   this.bricks1.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
@@ -361,6 +579,13 @@ export default (game, Phaser) => ({
                   this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                   this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                   this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "sticky"
+
+                  this.bricks2.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
+                  this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
                 }
 
                 else if (p === 2){
@@ -370,6 +595,13 @@ export default (game, Phaser) => ({
                   this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                   this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                   this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "invincible"
+
+                  this.bricks2.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
+                  this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
                 }
                 else if (p === 3){
                   this.bricks1.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
@@ -378,6 +610,13 @@ export default (game, Phaser) => ({
                   this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                   this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                   this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "bigPaddle"
+
+                  this.bricks2.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
+                  this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
                 }
                 else{
                   this.bricks1.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
@@ -386,6 +625,13 @@ export default (game, Phaser) => ({
                   this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                   this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                   this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "smallPaddle"
+
+                  this.bricks2.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
+                  this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                  this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
                 }
 
               }}
@@ -401,6 +647,9 @@ export default (game, Phaser) => ({
                   if (p === 0){
                     this.bricks1.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
                     this.bricks1.children[this.bricks1.children.length - 1].scale.setTo(0.04, 0.025)
+
+                    this.bricks2.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
+                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
                   }
                   else if ( p===1 ){
                     this.bricks1.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
@@ -409,6 +658,13 @@ export default (game, Phaser) => ({
                     this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                     this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                     this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "sticky"
+
+                    this.bricks2.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
+                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
                   }
 
                   else if (p === 2){
@@ -418,6 +674,13 @@ export default (game, Phaser) => ({
                     this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                     this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                     this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "invincible"
+
+                    this.bricks2.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
+                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
                   }
                   else if (p ===3){
                     this.bricks1.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
@@ -426,6 +689,13 @@ export default (game, Phaser) => ({
                     this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                     this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                     this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "bigPaddle"
+
+                    this.bricks2.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
+                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
                   }
                   else{
                     this.bricks1.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
@@ -434,407 +704,31 @@ export default (game, Phaser) => ({
                     this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
                     this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
                     this.bricks1.children[this.bricks1.children.length - 1].powerup.type = "smallPaddle"
+
+                    this.bricks2.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
+                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
                   }
                 }
               }
             }
             game.physics.enable(this.bricks1, Phaser.Physics.ARCADE);
             for (let i = 0; i < this.bricks1.children.length; i ++){
+              socket.emit('sendBrickToServer', [{brickx: this.bricks1[i].position.x, bricky: this.bricks1[i].position.y, key: "1"}])
               if (this.bricks1.children[i].powerup !== undefined){
                 game.physics.enable(this.bricks1.children[i].powerup, Phaser.Physics.ARCADE);
               }
             }
-
-
-            this.bricks2 = game.add.group()
-            for (let i = 0; i <= (28*8); i++){
-              if (i < 28){
-                if (!(i > 24)){
-                  let p = 0;
-                  if(!((Math.floor(Math.random() * 4)) === 1)){
-                    p = 0
-                  }
-                  else{
-                    p = 1 +(Math.floor(Math.random() * 4));
-                  }
-                  if (p === 0){
-                    this.bricks2.create(i * 33 + 40, 250, 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                  }
-                  else if (p===1){
-                    this.bricks2.create(i * 33 + 40, 250, 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
-                  }
-                  else if (p===2){
-                    this.bricks2.create(i * 33 + 40, 250, 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
-                  }
-                  else if(p ===3){
-                    this.bricks2.create(i * 33 + 40, 250, 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
-                  }
-                  else{
-                    this.bricks2.create(i * 33 + 40, 250, 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
-                  }
-                }
+            game.physics.enable(this.bricks2, Phaser.Physics.ARCADE);
+            for (let i = 0; i < this.bricks2.children.length; i ++){
+              socket.emit('sendBrickToServer', [{bricks: this.bricks2[i], key: "2"}])
+              if (this.bricks2.children[i].powerup !== undefined){
+                game.physics.enable(this.bricks2.children[i].powerup, Phaser.Physics.ARCADE);
               }
-              else if(i < (28*2)) {
-                if(!(i > (28*2 - 3))){
-                  let p = 0;
-                  if(!((Math.floor(Math.random() * 4)) === 1)){
-                    p = 0
-                  }
-                  else{
-                    p = 1 +(Math.floor(Math.random() * 4));
-                  }
-                  if (p === 0){
-                    this.bricks2.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                  }
-                  else if ( p===1 ){
-                    this.bricks2.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
-                  }
-
-                  else if (p === 2){
-                    this.bricks2.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
-                  }
-                  else if (p === 3){
-                    this.bricks2.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
-                  }
-                  else {
-                    this.bricks2.create(i * 33 + 30 - ((28*1)*33), 250 + (15*1), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
-                  }
-                }}
-                else if(i < (28*3)) {
-                  let p = 0;
-                  if(!((Math.floor(Math.random() * 4)) === 1)){
-                    p = 0
-                  }
-                  else{
-                    p = 1 +(Math.floor(Math.random() * 4));
-                  }
-                  if (p === 0){
-                    this.bricks2.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-
-                  }
-                  else if ( p===1 ){
-                    this.bricks2.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
-                  }
-
-                  else if (p===2){
-                    this.bricks2.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
-                  }
-                  else if (p === 3){
-                    this.bricks2.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
-                  }
-                  else{
-                    this.bricks2.create(i * 33 + 2 - ((28*2)*33), 250 + (15*2), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
-                  }
-                }
-                else if(i < (28*4)) {
-                  let p = 0;
-                  if(!((Math.floor(Math.random() * 4)) === 1)){
-                    p = 0
-                  }
-                  else{
-                    p = 1 +(Math.floor(Math.random() * 4));
-                  }
-                  if (p === 0){
-                    this.bricks2.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                  }
-                  else if ( p===1 ){
-                    this.bricks2.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
-                  }
-
-                  else if (p === 2){
-                    this.bricks2.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
-                  }
-                  else if (p === 3){
-                    this.bricks2.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
-                  }
-                  else {
-                    this.bricks2.create(i * 33 + 2 - ((28*3)*33), 250 + (15*3), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
-                  }
-
-                }
-                else if(i < (28*5)) {
-                  let p = 0;
-                  if(!((Math.floor(Math.random() * 4)) === 1)){
-                    p = 0
-                  }
-                  else{
-                    p = 1 +(Math.floor(Math.random()*4));
-                  }
-                  if (p === 0){
-                    this.bricks2.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                  }
-                  else if ( p===1 ){
-                    this.bricks2.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
-                  }
-
-                  else if(p===2){
-                    this.bricks2.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
-                  }
-                  else if (p === 3){
-                    this.bricks2.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
-                  }
-                  else{
-                    this.bricks2.create(i * 33 + 2 - ((28*4)*33), 250 + (15*4), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
-                  }
-
-
-                }
-                else if(i < (28*6)) {
-                  let p = 0;
-                  if(!((Math.floor(Math.random() * 4)) === 1)){
-                    p = 0
-                  }
-                  else{
-                    p = 1 +(Math.floor(Math.random() * 4));
-                  }
-                  if (p === 0){
-                    this.bricks2.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                  }
-                  else if ( p===1 ){
-                    this.bricks2.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
-                  }
-
-                  else if(p === 2){
-                    this.bricks2.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
-                  }
-                  else if(p === 3){
-                    this.bricks2.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
-                  }
-                  else{
-                    this.bricks2.create(i * 33 + 2 - ((28*5)*33), 250 + (15*5), 'brick')
-                    this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                    this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
-                  }
-
-                }
-                else if(i < (28*7)) {
-                  if(!(i > (28*7 - 3))){
-                    let p = 0;
-                    if(!((Math.floor(Math.random() * 4)) === 1)){
-                      p = 0
-                    }
-                    else{
-                      p = 1 +(Math.floor(Math.random() * 4));
-                    }
-                    if (p === 0){
-                      this.bricks2.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
-                      this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                    }
-                    else if ( p===1 ){
-                      this.bricks2.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
-                      this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
-                    }
-
-                    else if (p === 2){
-                      this.bricks2.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
-                      this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
-                    }
-                    else if (p === 3){
-                      this.bricks2.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
-                      this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
-                    }
-                    else{
-                      this.bricks2.create(i * 33 + 30 - ((28*6)*33), 250 + (15*6), 'brick')
-                      this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                      this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
-                    }
-
-                  }}
-                  else if(i < (28*8)) {
-                    if(!(i > (28*8 - 4))){
-                      let p = 0;
-                      if(!((Math.floor(Math.random() * 4)) === 1)){
-                        p = 0
-                      }
-                      else{
-                        p = 1 +(Math.floor(Math.random()*4));
-                      }
-                      if (p === 0){
-                        this.bricks2.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
-                        this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                      }
-                      else if ( p===1 ){
-                        this.bricks2.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
-                        this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "sticky"
-                      }
-
-                      else if (p === 2){
-                        this.bricks2.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
-                        this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "invincible"
-                      }
-                      else if (p ===3){
-                        this.bricks2.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
-                        this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "bigPaddle"
-                      }
-                      else{
-                        this.bricks2.create(i * 33 + 40 - ((28*7)*33), 250 + (15*7), 'brick')
-                        this.bricks2.children[this.bricks2.children.length - 1].scale.setTo(0.04, 0.025)
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup');
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
-                        this.bricks2.children[this.bricks2.children.length - 1].powerup.type = "smallPaddle"
-                      }
-                    }
-                  }
-                }
-                game.physics.enable(this.bricks2, Phaser.Physics.ARCADE);
-                for (let i = 0; i < this.bricks2.children.length; i ++){
-                  if (this.bricks2.children[i].powerup !== undefined){
-                    game.physics.enable(this.bricks2.children[i].powerup, Phaser.Physics.ARCADE);
-                  }
-                }
-
+            }
 
       },
 
@@ -842,54 +736,107 @@ export default (game, Phaser) => ({
         if(this.player != null && this.otherPlayer != null){
           if(this.game.state.states['playMultiplayer']._side == "topSide"){
             this.movePaddle(this.otherPlayer)
-            this.updateBall(this.balls, this.otherPlayer, this.bricks2)
           }
           else{
             this.movePaddle(this.player)
-            this.updateBall(this.balls, this.player, this.bricks1)
           }
         }
+        // debugger;
+        this.updateBall(this.balls, this.player, this.bricks1)
+        this.updateBall(this.balls, this.otherPlayer, this.bricks2)
+        this.checkIfPowerupHitPlayer()
       },
 
-      movePaddle: function(player){
-        if(player.bigPaddle){
-            if (this.keyboard.isDown(Phaser.Keyboard.A) && player.position.x > -35){
-              player.body.velocity.x = -300;
-            }
-            else if (this.keyboard.isDown(Phaser.Keyboard.D) && player.position.x < 760) {
-              player.body.velocity.x = 300
-            }
-            else{
-              player.body.velocity.x = 0;
-            }
-          }
+      checkIfPowerupHitPlayer(){
+      //   for(let i = 0; i < this.bricks.children.length; i++){
+      //     if (this.bricks.children[i].powerup !== undefined && this.bricks.children[i].powerup.visible){
+      //       if (this.bricks.children[i].powerup.position.y >= 630 && this.bricks.children[i].powerup.position.y < 635 &&
+      //         ((this.player.position.x + 15) < this.bricks.children[i].powerup.position.x) &&
+      //         ((this.player.position.x + 155) > this.bricks.children[i].powerup.position.x)){
+      //           this.handlePowerupHitPlayer(this.player, this.bricks.children[i].powerup)
+      //       }
+      //       if(this.bricks.children[i].powerup.position.y >= 630 && this.bricks.children[i].powerup.position.y < 635 &&
+      //         ((this.otherPlayer.position.x + 15) < this.bricks.children[i].powerup.position.x) &&
+      //         ((this.otherPlayer.position.x + 155) > this.bricks.children[i].powerup.position.x)){
+      //           this.handlePowerupHitPlayer(this.otherPlayer, this.bricks.children[i].powerup)
+      //       }
+      //     }
+      //   }
+      // },
+      // handlePowerupHitPlayer(player, powerup){
+      },
 
-          if(player.smallPaddle){
-            if (this.keyboard.isDown(Phaser.Keyboard.A) && player.position.x > -8){
-              player.body.velocity.x = -300;
-            }
-            else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 870) {
-              player.body.velocity.x = 300
-            }
-            else{
-              player.body.velocity.x = 0;
-            }
-          }
 
-        if((player.bigPaddle === false || player.bigPaddle === undefined) && (player.smallPaddle === false || player.smallPaddle === undefined)){
-          if (this.keyboard.isDown(Phaser.Keyboard.A) && player.position.x > -25){
+
+      handleBallOffWall: function(ball, num){
+        ball.body.velocity.x = -1 * ball.body.velocity.x;
+        ball.position.x += (ball.body.velocity.x * num / 20)
+      },
+
+      handleBallOffPaddle: function(ball, player, i){
+        ball.body.velocity.y = -1 * ball.body.velocity.y;
+        if(player.bigPaddle === false || player.bigPaddle === undefined && (player.smallPaddle === false || player.smallPaddle === undefined)){
+          ball.body.velocity.x = ((ball.position.x - (player.position.x + 70)) * 3)
+        }
+        else if(player.bigPaddle){
+          ball.body.velocity.x = ((ball.position.x - (player.position.x + 100)) * 3)
+        }
+        else if(player.smallPaddle){
+          ball.body.velocity.x = ((ball.position.x - (player.position.x + 30)) * 3)
+        }
+        ball.position.y += ball.body.velocity.y /30;
+      if(player.sticky){
+        player.stick = true;
+        ball.position.oldx = (ball.position.x - (player.position.x))
+      }
+        socket.emit('updateBallToServer', [{index: i, x: ball.position.x, y: ball.position.y, vx: ball.body.velocity.x, vy: ball.body.velocity.y, id: socket.id}])
+    },
+
+    handleRemoveBricksFromScreen: function(brick1, brick2){
+      brick1.position.x = -40;
+      brick2.position.x = -40;
+    },
+
+    movePaddle: function(player){
+      if(player.bigPaddle){
+          if (this.keyboard.isDown(Phaser.Keyboard.A) && player.position.x > -35){
             player.body.velocity.x = -300;
           }
-          else if (this.keyboard.isDown(Phaser.Keyboard.D) && player.position.x < 815) {
+          else if (this.keyboard.isDown(Phaser.Keyboard.D) && player.position.x < 760) {
             player.body.velocity.x = 300
           }
           else{
             player.body.velocity.x = 0;
           }
         }
-        this.updateCurrentPlayer(player)
 
-      },
+        if(player.smallPaddle){
+          if (this.keyboard.isDown(Phaser.Keyboard.A) && player.position.x > -8){
+            player.body.velocity.x = -300;
+          }
+          else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 870) {
+            player.body.velocity.x = 300
+          }
+          else{
+            player.body.velocity.x = 0;
+          }
+        }
+
+      if((player.bigPaddle === false || player.bigPaddle === undefined) && (player.smallPaddle === false || player.smallPaddle === undefined)){
+        if (this.keyboard.isDown(Phaser.Keyboard.A) && player.position.x > -25){
+          player.body.velocity.x = -300;
+        }
+        else if (this.keyboard.isDown(Phaser.Keyboard.D) && player.position.x < 815) {
+          player.body.velocity.x = 300
+        }
+        else{
+          player.body.velocity.x = 0;
+        }
+      }
+      this.updateCurrentPlayer(player)
+
+    },
+
       updateCurrentPlayer: function(player){
         socket.emit('updatePlayer', [{x: player.position.x, y: player.position.y, vx: player.body.velocity.x, vy: player.body.velocity.y, id: socket.id}])
       },
@@ -909,15 +856,14 @@ export default (game, Phaser) => ({
         }
 
         if (ball.position.x + (ball.body.velocity.x / 20) < -5){
-            ball.body.velocity.x = -1 * ball.body.velocity.x;
-            ball.position.x += (ball.body.velocity.x / 20)
+            this.handleBallOffWall(ball, 1)
           }
         if(ball.position.x + (ball.body.velocity.x / 20) > 920){
-          ball.body.velocity.x = -1 * ball.body.velocity.x;
-          ball.position.x -= (ball.body.velocity.x / 20)
+            this.handleBallOffWall(ball, -1)
         }
 
-        if((!(player.smallPaddle) && !(player.bigPaddle) && ((player.position.y > 400 && (ball.position.y >= 630 && ball.position.y < 635)) || (player.position.y < 60 && (ball.position.y >= 10 && ball.position.y < 15))) &&
+        if((!(player.smallPaddle) && !(player.bigPaddle) && ((player.position.y > 400 && (ball.position.y >= 630 && ball.position.y < 635)) ||
+            (player.position.y < 60 && (ball.position.y >= 10 && ball.position.y < 15))) &&
             ((player.position.x + 15) < ball.position.x) &&
             ((player.position.x + 145) > ball.position.x)) ||
             (player.bigPaddle && ((ball.position.y >= 630 && ball.position.y < 635) || (ball.position.y >= 10 && ball.position.y < 15) &&
@@ -926,49 +872,43 @@ export default (game, Phaser) => ({
             (player.smallPaddle && ((ball.position.y >= 630 && ball.position.y < 635) || (ball.position.y >= 10 && ball.position.y < 20) &&
             ((player.position.x + 10) < ball.position.x) &&
             ((player.position.x + 60) > ball.position.x)))) {
-                ball.body.velocity.y = -1 * ball.body.velocity.y;
-                if(player.bigPaddle === false || player.bigPaddle === undefined && (player.smallPaddle === false || player.smallPaddle === undefined)){
-                  ball.body.velocity.x = ((ball.position.x - (player.position.x + 70)) * 3)
-                }
-                else if(player.bigPaddle){
-                  ball.body.velocity.x = ((ball.position.x - (player.position.x + 100)) * 3)
-                }
-                else if(player.smallPaddle){
-                  ball.body.velocity.x = ((ball.position.x - (player.position.x + 30)) * 3)
-                }
-                ball.position.y += ball.body.velocity.y /30;
-              if(player.sticky){
-                player.stick = true;
-                ball.position.oldx = (ball.position.x - (player.position.x))
-              }
-
+              this.handleBallOffPaddle(ball, player, i)
           }
 
 
           for(let j = 0; j < bricks.children.length; j++){
             if ((ball.position.x + 5 > (bricks.children[j].position.x -13)) && (ball.position.x-5 < (bricks.children[j].position.x + 15)) &&
-                    (ball.position.y + 5 > (bricks.children[j].position.y - 5)) && (ball.position.y-5 < (bricks.children[j].position.y + 5))) {
+                (ball.position.y + 5 > (bricks.children[j].position.y - 5)) && (ball.position.y-5 < (bricks.children[j].position.y + 5))) {
                 if (bricks.children[j].powerup !== undefined){
-                    bricks.children[j].powerup.position.x = bricks.children[j].position.x - 8
-                    bricks.children[j].powerup.position.y = bricks.children[j].position.y
-                    bricks.children[j].powerup.body.velocity.y = 250 + Math.floor(Math.random() * 100)
-                    bricks.children[j].powerup.visible = true
+                  console.log("The powerup on line 876 is ", bricks.children[j].powerup);
+                  console.log("The bricks group is this ", bricks);
+                  let direction = null;
+                  if (ball.body.velocity.y > 0){
+                    direction = -1;
+                  }
+                  else{
+                    direction = 1;
+                  }
+                  let brick = bricks.children[j]
+                  let powerup = brick.powerup
+                  powerup.position.x = brick.position.x - 8
+                  powerup.position.y = brick.position.y
+                  powerup.body.velocity.y =(250 + Math.floor(Math.random() * 100)) * direction
+                  powerup.visible = true
+                  console.log("index it is looking at is " + j);
+                  socket.emit('updatePowerupActivationToServer', [{index: j, brickx: brick.position.x - 8, bricky: brick.position.y, id: socket.id, direction: direction}])
                 }
-                this.bricks1.children[j].position.x = -40;
-                this.bricks2.children[j].position.x = -40;
-
+                this.handleRemoveBricksFromScreen(this.bricks1.children[j], this.bricks2.children[j])
 
                 if (!(player.invincible)){
                   ball.body.velocity.y = ball.body.velocity.y * -1
                 }
                 socket.emit('updateBrickToServer', [{index: j, id: socket.id}])
-
             }
         }
         socket.emit('updateBallToServer', [{index: i, x: ball.position.x, y: ball.position.y, vx: ball.body.velocity.x, vy: ball.body.velocity.y, id: socket.id}])
-
       }
-      }
+    }
     })
 
       //   if(this.player.stick){
