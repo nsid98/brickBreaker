@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "webpack && node ./bin/www",
-    "debug": "webpack && node --inspect ./bin/www",
+    "start": "node ./bin/www",
+    "debug": "node --inspect ./bin/www",
     "build": "webpack",
     "webpack": "webpack --colors --progress --config ./webpack.config.js"
   },
