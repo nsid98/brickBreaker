@@ -67,9 +67,7 @@ io.on('connection', function (socket) {
   })
 
   socket.on('sendBrickToServer', function(data){
-    debugger
     socket.broadcast.emit('sendBrick', data)
-    console.log("It got to the server side in sendBrickToServer", data);
   })
 
   socket.on('disconnect', function(socket){

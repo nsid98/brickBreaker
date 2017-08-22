@@ -864,7 +864,7 @@ export default (game, Phaser) => ({
         let ball = null
         for(let i = 0; i < balls.children.length; i ++){
           ball = balls.children[i]
-        if(ball.body.velocity.x == 0 || ball.body.velocity.y == 0){
+        if(this.bricks1.children.length >= 212 && this.bricks2.children.length >=212 && (ball.body.velocity.x == 0 || ball.body.velocity.y == 0)){
           ball.body.velocity.x = 100 + (Math.random() * 100);
           if(player.position.y > 400){
             ball.body.velocity.y = 270;
