@@ -28,14 +28,31 @@ export default (game, Phaser) => ({
       if(this.game.state.states['playMultiplayer']._side != "topSide"){
         let x = data[0].brickx;
         let y = data[0].bricky;
+        let powerup = data[0].powerup
 
         if(data[0].key === "1"){
           this.bricks1.create(x, y, 'brick')
           this.bricks1.children[this.bricks1.children.length -1].scale.setTo(0.04, 0.025)
+          if (powerup != null){
+            this.bricks1.children[this.bricks1.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup')
+            this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+            this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
+            this.bricks1.children[this.bricks1.children.length - 1].powerup.type = powerup
+          }
+          console.log(this.bricks1.children.length - 1);
+          console.log("The powerup created on other client side is ", powerup)
         }
         if(data[0].key === "2"){
           this.bricks2.create(x, y, 'brick')
           this.bricks2.children[this.bricks2.children.length -1].scale.setTo(0.04, 0.025)
+          if (powerup != null){
+            this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup')
+            this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
+            this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
+            this.bricks2.children[this.bricks2.children.length - 1].powerup.type = powerup
+          }
+          console.log(this.bricks2.children.length - 1);
+          console.log("The powerup created on other client side is ", powerup)
         }
       }
     }))
@@ -59,15 +76,16 @@ export default (game, Phaser) => ({
     }))
 
     socket.on('updatePowerups', ((data) =>{
-      // if(this.bricks1.children[data[0].index] != undefined){
-      //   let powerup = this.bricks1.children[data[0].index].powerup
-      // }
-      // if(socket.id != data[0].id){
-      //   powerup.position.x = data[0].brickx
-      //   powerup.position.y = data[0].bricky
-      //   powerup.body.velocity.y =(250 + Math.floor(Math.random() * 100)) * data[0].direction
-      //   powerup.visible = true
-      // }
+      let powerup = this.bricks1.children[data[0].index].powerup
+      console.log("brick received is ", this.bricks1.children[data[0].index]);
+      console.log("index received is", data[0].index);
+
+      if(socket.id != data[0].id){
+        powerup.position.x = data[0].brickx
+        powerup.position.y = data[0].bricky
+        powerup.body.velocity.y =(250 + Math.floor(Math.random() * 100)) * data[0].direction
+        powerup.visible = true
+      }
     }))
 
     socket.on('updateBricks', ((data) =>{
@@ -729,9 +747,11 @@ export default (game, Phaser) => ({
             game.physics.enable(this.bricks1, Phaser.Physics.ARCADE);
             for (let i = 0; i < this.bricks1.children.length; i ++){
               let powerup = null
-              if (!(this.bricks1.children[this.bricks1.children.length - 1].powerup == undefined)){
+              if (this.bricks1.children[this.bricks1.children.length - 1].powerup != undefined){
                 powerup = this.bricks1.children[this.bricks1.children.length - 1].powerup.type
               }
+              console.log(i);
+              console.log("powerup created is", powerup);
               socket.emit('sendBrickToServer', [{i: i, brickx: this.bricks1.children[i].position.x, bricky: this.bricks1.children[i].position.y, powerup: powerup, key: "1"}])
               if (this.bricks1.children[i].powerup !== undefined){
                 game.physics.enable(this.bricks1.children[i].powerup, Phaser.Physics.ARCADE);
@@ -740,9 +760,11 @@ export default (game, Phaser) => ({
             game.physics.enable(this.bricks2, Phaser.Physics.ARCADE);
             for (let i = 0; i < this.bricks2.children.length; i ++){
               let powerup = null
-              if (!(this.bricks2.children[this.bricks2.children.length - 1].powerup == undefined)){
+              if (this.bricks2.children[this.bricks2.children.length - 1].powerup != undefined){
                 powerup = this.bricks2.children[this.bricks2.children.length - 1].powerup.type
               }
+              console.log(i);
+              console.log("powerup created is", powerup);
               socket.emit('sendBrickToServer', [{i: i, brickx: this.bricks2.children[i].position.x, bricky: this.bricks2.children[i].position.y, powerup: powerup, key: "2"}])
 
               if (this.bricks2.children[i].powerup !== undefined){
@@ -912,6 +934,8 @@ export default (game, Phaser) => ({
                   powerup.position.y = brick.position.y
                   powerup.body.velocity.y =(250 + Math.floor(Math.random() * 100)) * direction
                   powerup.visible = true
+                  console.log("index is ", j);
+                  console.log("The brick being sent is ", brick);
                   socket.emit('updatePowerupActivationToServer', [{index: j, brickx: brick.position.x - 8, bricky: brick.position.y, id: socket.id, direction: direction}])
                 }
                 this.handleRemoveBricksFromScreen(this.bricks1.children[j], this.bricks2.children[j])
