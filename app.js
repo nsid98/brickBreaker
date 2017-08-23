@@ -31,43 +31,53 @@ var io = require('socket.io').listen(server);
 // const io = require('socket.io').listen(server);
 let player1 = "bottomSide"
 let player2 = "topSide"
+let playerList = []
+
 
 let counter = 0
+let roomNumber = 1
 io.on('connection', function (socket) {
 
-  let playerList = []
   socket.on('MultiplayerStart', function(){
-    if(counter % 2 == 0){
+    if(counter == 0){
       socket.emit('CreateBottomPlayer');
       playerList.push(player1)
+      socket.emit('join', [playerList[playerList.length - 1], roomNumber])
+      socket.join('room' + roomNumber)
       counter ++
-      socket.emit('join', playerList[playerList.length - 1])
 
-    } else if(counter % 2 == 1) {
+    } else if(counter == 1) {
       socket.emit('CreateTopPlayer')
       playerList.push(player2)
-      counter ++
-      socket.emit('join', playerList[playerList.length - 1])
+      socket.emit('join', [playerList[playerList.length - 1], roomNumber])
+      socket.join('room' + roomNumber)
+      counter = 0;
+      roomNumber ++
     }
   })
 
   socket.on('updatePlayer', function(data){
-    socket.broadcast.emit('updatePlayerToClient', data)
+    io.to('room' + (data[0].roomNumber).toString()).emit('updatePlayerToClient', data)
+    // socket.broadcast.emit('updatePlayerToClient', data)
   })
 
   socket.on('updateBallToServer', function(data){
-    socket.broadcast.emit('updateBall', data)
+    io.to('room' + (data[0].roomNumber).toString()).emit('updateBall', data)
+    // socket.broadcast.emit('updateBall', data)
   })
 
   socket.on('updateBrickToServer', function(data){
-    socket.broadcast.emit('updateBricks', data)
+    io.to('room' + (data[0].roomNumber).toString()).emit('updateBricks', data)
+    // socket.broadcast.emit('updateBricks', data)
   })
   socket.on('updatePowerupActivationToServer', function(data){
-    socket.broadcast.emit('updatePowerups', data)
+    io.to('room' + (data[0].roomNumber).toString()).emit('updatePowerups', data)
+    // socket.broadcast.emit('updatePowerups', data)
   })
 
   socket.on('sendBrickToServer', function(data){
-    socket.broadcast.emit('sendBrick', data)
+    io.to('room' + (data[0].roomNumber).toString()).emit('sendBrick', data)
+    // socket.broadcast.emit('sendBrick', data)
   })
 
   socket.on('disconnect', function(socket){

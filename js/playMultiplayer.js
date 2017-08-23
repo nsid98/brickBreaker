@@ -752,7 +752,7 @@ export default (game, Phaser) => ({
               }
               console.log(i);
               console.log("powerup created is", powerup);
-              socket.emit('sendBrickToServer', [{i: i, brickx: this.bricks1.children[i].position.x, bricky: this.bricks1.children[i].position.y, powerup: powerup, key: "1"}])
+              socket.emit('sendBrickToServer', [{i: i, brickx: this.bricks1.children[i].position.x, bricky: this.bricks1.children[i].position.y, powerup: powerup, key: "1", roomNumber: this.game.state.states['playMultiplayer']._roomNumber}])
               if (this.bricks1.children[i].powerup !== undefined){
                 game.physics.enable(this.bricks1.children[i].powerup, Phaser.Physics.ARCADE);
               }
@@ -765,7 +765,7 @@ export default (game, Phaser) => ({
               }
               console.log(i);
               console.log("powerup created is", powerup);
-              socket.emit('sendBrickToServer', [{i: i, brickx: this.bricks2.children[i].position.x, bricky: this.bricks2.children[i].position.y, powerup: powerup, key: "2"}])
+              socket.emit('sendBrickToServer', [{i: i, brickx: this.bricks2.children[i].position.x, bricky: this.bricks2.children[i].position.y, powerup: powerup, key: "2", roomNumber: this.game.state.states['playMultiplayer']._roomNumber}])
 
               if (this.bricks2.children[i].powerup !== undefined){
                 game.physics.enable(this.bricks2.children[i].powerup, Phaser.Physics.ARCADE);
@@ -830,7 +830,7 @@ export default (game, Phaser) => ({
         player.stick = true;
         ball.position.oldx = (ball.position.x - (player.position.x))
       }
-        socket.emit('updateBallToServer', [{index: i, x: ball.position.x, y: ball.position.y, vx: ball.body.velocity.x, vy: ball.body.velocity.y, id: socket.id}])
+        socket.emit('updateBallToServer', [{index: i, x: ball.position.x, y: ball.position.y, vx: ball.body.velocity.x, vy: ball.body.velocity.y, id: socket.id, roomNumber: this.game.state.states['playMultiplayer']._roomNumber}])
     },
 
     handleRemoveBricksFromScreen: function(brick1, brick2){
@@ -879,7 +879,7 @@ export default (game, Phaser) => ({
     },
 
       updateCurrentPlayer: function(player){
-        socket.emit('updatePlayer', [{x: player.position.x, y: player.position.y, vx: player.body.velocity.x, vy: player.body.velocity.y, id: socket.id}])
+        socket.emit('updatePlayer', [{x: player.position.x, y: player.position.y, vx: player.body.velocity.x, vy: player.body.velocity.y, id: socket.id, roomNumber: this.game.state.states['playMultiplayer']._roomNumber}])
       },
 
       updateBall: function(balls, player, bricks){
@@ -936,17 +936,17 @@ export default (game, Phaser) => ({
                   powerup.visible = true
                   console.log("index is ", j);
                   console.log("The brick being sent is ", brick);
-                  socket.emit('updatePowerupActivationToServer', [{index: j, brickx: brick.position.x - 8, bricky: brick.position.y, id: socket.id, direction: direction}])
+                  socket.emit('updatePowerupActivationToServer', [{index: j, brickx: brick.position.x - 8, bricky: brick.position.y, id: socket.id, direction: direction, roomNumber: this.game.state.states['playMultiplayer']._roomNumber}])
                 }
                 this.handleRemoveBricksFromScreen(this.bricks1.children[j], this.bricks2.children[j])
 
                 if (!(player.invincible)){
                   ball.body.velocity.y = ball.body.velocity.y * -1
                 }
-                socket.emit('updateBrickToServer', [{index: j, id: socket.id}])
+                socket.emit('updateBrickToServer', [{index: j, id: socket.id, roomNumber: this.game.state.states['playMultiplayer']._roomNumber}])
             }
         }
-        socket.emit('updateBallToServer', [{index: i, x: ball.position.x, y: ball.position.y, vx: ball.body.velocity.x, vy: ball.body.velocity.y, id: socket.id}])
+        socket.emit('updateBallToServer', [{index: i, x: ball.position.x, y: ball.position.y, vx: ball.body.velocity.x, vy: ball.body.velocity.y, id: socket.id, roomNumber: this.game.state.states['playMultiplayer']._roomNumber}])
       }
     }
     })
