@@ -1,45 +1,76 @@
 window.socket = io()
 export default (game, Phaser) => ({
   create: function () {
-    const homeScreen = game.add.sprite(0, 0, 'homeScreen');
+    let homeScreen = game.add.sprite(0, 0, 'homeScreen');
     homeScreen.width = game.width
     homeScreen.height = game.height
 
-    var nameLabel = game.add.text(game.world.width / 2 -130, 20, 'Brick Breaker',
-  {font: '50px Arial', fill: '#ffffff'});
-
-    var startLabel = game.add.text(80, 80, 'press the "S" key to go solo',
-  {font: '25px Arial', fill: '#ffffff'})
-
-  var startLabel = game.add.text(480, 80, 'press the "M" key to play Multiplayer',
-  {font: '25px Arial', fill: '#ffffff'})
-
-  var startLabel = game.add.text(230, game.world.height - 80, 'press the "I" key to go to instruction screen',
-  {font: '25px Arial', fill: '#ffffff'})
+    this.game.singlePlayerBorder = game.add.sprite(75, 75, 'border')
+    this.game.singlePlayerBorder.width = 240
+    this.game.singlePlayerBorder.height = 35
+    this.game.singlePlayerBorder.inputEnabled = true;
+    this.game.singlePlayerBorder.alpha = 1
 
 
+    this.game.multiplayerBorder = game.add.sprite(555, 75, 'border')
+    this.game.multiplayerBorder.width = 335
+    this.game.multiplayerBorder.height = 35
+    this.game.multiplayerBorder.inputEnabled = true;
+    this.game.multiplayerBorder.alpha = 1
 
-  var skey = game.input.keyboard.addKey(Phaser.Keyboard.S);
-  skey.onDown.addOnce(this.singlePlayer, this);
+
+    this.game.instructionsBorder = game.add.sprite(265, 595, 'border')
+    this.game.instructionsBorder.width = 410
+    this.game.instructionsBorder.height = 35
+    this.game.instructionsBorder.inputEnabled = true;
+    this.game.instructionsBorder.alpha = 1
 
 
-  var mkey = game.input.keyboard.addKey(Phaser.Keyboard.M);
-  mkey.onDown.addOnce(this.multiPlayer, this);
+    var nameLabel = game.add.text(game.world.width / 2 -130, 20, 'Break Me',
+    {font: '50px Arial', fill: '#ffffff'});
 
-  var ikey = game.input.keyboard.addKey(Phaser.Keyboard.I);
-  ikey.onDown.addOnce(this.instruction, this);
+    var startLabel = game.add.text(80, 80, 'Click here to go solo',
+    {font: '25px Arial', fill: '#ffffff'})
 
-},
-singlePlayer: function() {
-  game.state.start('play');
-},
+    var startLabel = game.add.text(560, 80, 'Click here to play Multiplayer',
+    {font: '25px Arial', fill: '#ffffff'})
 
-multiPlayer: function(){
-  socket.emit('MultiplayerStart')
-},
+    var instructionLabel = game.add.text(270, game.world.height - 80, 'Click here to go to instruction screen',
+    {font: '25px Arial', fill: '#ffffff'})
 
-instruction: function(){
-  game.state.start('instruction')
-}
+    game.input.onDown.add(function() {
 
+      if(game.input.mousePointer.x >= 80 && game.input.mousePointer.x < 305 && game.input.mousePointer.y >= 80 && game.input.mousePointer.y < 104){
+      game.state.start('play')
+      }
+      else if(game.input.mousePointer.x >= 560 && game.input.mousePointer.x < 900 && game.input.mousePointer.y >= 80 && game.input.mousePointer.y < 104){
+      socket.emit('MultiplayerStart')
+      }
+      else if(game.input.mousePointer.x >= 270 && game.input.mousePointer.x < 675 && game.input.mousePointer.y >= 600 && game.input.mousePointer.y < 625){
+      game.state.start('instruction')
+      }
+    })
+  },
+  update: function(){
+    if(this.game.singlePlayerBorder.input.pointerOver()){
+      this.game.singlePlayerBorder.alpha = 2.5
+    }
+    if(!(this.game.singlePlayerBorder.input.pointerOver())){
+      this.game.singlePlayerBorder.alpha = 1
+    }
+
+    if(this.game.multiplayerBorder.input.pointerOver()){
+      this.game.multiplayerBorder.alpha = 2.5
+    }
+    if(!(this.game.multiplayerBorder.input.pointerOver())){
+      this.game.multiplayerBorder.alpha = 1
+    }
+
+    if(this.game.instructionsBorder.input.pointerOver()){
+      this.game.instructionsBorder.alpha = 2.5
+    }
+    if(!(this.game.instructionsBorder.input.pointerOver())){
+      this.game.instructionsBorder.alpha = 1
+    }
+  }
 });

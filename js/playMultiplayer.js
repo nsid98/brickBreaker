@@ -24,6 +24,12 @@ export default (game, Phaser) => ({
         player.body.velocity.y = data[0].vy;
       }
     }))
+    socket.on('sendLose', ((data) => {
+      if(socket.id != data[0].id){
+        game.state.start('lose')
+
+      }
+    }))
     socket.on('sendBrick', ((data)=> {
       if(this.game.state.states['playMultiplayer']._side != "topSide"){
         let x = data[0].brickx;
@@ -38,10 +44,8 @@ export default (game, Phaser) => ({
             this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
             this.bricks1.children[this.bricks1.children.length - 1].powerup.visible = false;
             this.bricks1.children[this.bricks1.children.length - 1].powerup.type = powerup
-          }
-          console.log(this.bricks1.children.length - 1);
-          console.log("The powerup created on other client side is ", powerup)
         }
+      }
         if(data[0].key === "2"){
           this.bricks2.create(x, y, 'brick')
           this.bricks2.children[this.bricks2.children.length -1].scale.setTo(0.04, 0.025)
@@ -51,8 +55,6 @@ export default (game, Phaser) => ({
             this.bricks2.children[this.bricks2.children.length - 1].powerup.visible = false;
             this.bricks2.children[this.bricks2.children.length - 1].powerup.type = powerup
           }
-          console.log(this.bricks2.children.length - 1);
-          console.log("The powerup created on other client side is ", powerup)
         }
       }
     }))
@@ -77,8 +79,6 @@ export default (game, Phaser) => ({
 
     socket.on('updatePowerups', ((data) =>{
       let powerup = this.bricks1.children[data[0].index].powerup
-      console.log("brick received is ", this.bricks1.children[data[0].index]);
-      console.log("index received is", data[0].index);
 
       if(socket.id != data[0].id){
         powerup.position.x = data[0].brickx
@@ -750,8 +750,6 @@ export default (game, Phaser) => ({
               if (this.bricks1.children[this.bricks1.children.length - 1].powerup != undefined){
                 powerup = this.bricks1.children[this.bricks1.children.length - 1].powerup.type
               }
-              console.log(i);
-              console.log("powerup created is", powerup);
               socket.emit('sendBrickToServer', [{i: i, brickx: this.bricks1.children[i].position.x, bricky: this.bricks1.children[i].position.y, powerup: powerup, key: "1", roomNumber: this.game.state.states['playMultiplayer']._roomNumber}])
               if (this.bricks1.children[i].powerup !== undefined){
                 game.physics.enable(this.bricks1.children[i].powerup, Phaser.Physics.ARCADE);
@@ -763,8 +761,6 @@ export default (game, Phaser) => ({
               if (this.bricks2.children[this.bricks2.children.length - 1].powerup != undefined){
                 powerup = this.bricks2.children[this.bricks2.children.length - 1].powerup.type
               }
-              console.log(i);
-              console.log("powerup created is", powerup);
               socket.emit('sendBrickToServer', [{i: i, brickx: this.bricks2.children[i].position.x, bricky: this.bricks2.children[i].position.y, powerup: powerup, key: "2", roomNumber: this.game.state.states['playMultiplayer']._roomNumber}])
 
               if (this.bricks2.children[i].powerup !== undefined){
@@ -775,6 +771,10 @@ export default (game, Phaser) => ({
       },
 
       update: function() {
+        if((this.balls.children[0].position.y > 680 || this.balls.children[0].position.y < 0) && (this.balls.children[1].position.y > 680 || this.balls.children[1].position.y < 0)){
+          game.state.start('lose')
+          socket.emit('lose', [{roomNumber: this.game.state.states['playMultiplayer']._roomNumber, id: socket.id}])
+        }
         if(this.player != null && this.otherPlayer != null){
           if(this.game.state.states['playMultiplayer']._side == "topSide"){
             this.movePaddle(this.otherPlayer)
@@ -785,7 +785,7 @@ export default (game, Phaser) => ({
         }
         this.updateBall(this.balls, this.player, this.bricks1)
         this.updateBall(this.balls, this.otherPlayer, this.bricks2)
-        this.checkIfPowerupHitPlayer()
+        // this.checkIfPowerupHitPlayer()
       },
 
       checkIfPowerupHitPlayer(){
@@ -840,10 +840,10 @@ export default (game, Phaser) => ({
 
     movePaddle: function(player){
       if(player.bigPaddle){
-          if (this.keyboard.isDown(Phaser.Keyboard.A) && player.position.x > -35){
+          if ((this.keyboard.isDown(Phaser.Keyboard.A) || this.keyboard.isDown(Phaser.Keyboard.LEFT)) && player.position.x > -35){
             player.body.velocity.x = -300;
           }
-          else if (this.keyboard.isDown(Phaser.Keyboard.D) && player.position.x < 760) {
+          else if ((this.keyboard.isDown(Phaser.Keyboard.D) || this.keyboard.isDown(Phaser.Keyboard.RIGHT)) && player.position.x < 760) {
             player.body.velocity.x = 300
           }
           else{
@@ -852,10 +852,10 @@ export default (game, Phaser) => ({
         }
 
         if(player.smallPaddle){
-          if (this.keyboard.isDown(Phaser.Keyboard.A) && player.position.x > -8){
+          if ((this.keyboard.isDown(Phaser.Keyboard.A) || this.keyboard.isDown(Phaser.Keyboard.LEFT)) && player.position.x > -8){
             player.body.velocity.x = -300;
           }
-          else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 870) {
+          else if ((this.keyboard.isDown(Phaser.Keyboard.D) || this.keyboard.isDown(Phaser.Keyboard.RIGHT)) && this.player.position.x < 870) {
             player.body.velocity.x = 300
           }
           else{
@@ -864,10 +864,10 @@ export default (game, Phaser) => ({
         }
 
       if((player.bigPaddle === false || player.bigPaddle === undefined) && (player.smallPaddle === false || player.smallPaddle === undefined)){
-        if (this.keyboard.isDown(Phaser.Keyboard.A) && player.position.x > -25){
+        if ((this.keyboard.isDown(Phaser.Keyboard.A) || this.keyboard.isDown(Phaser.Keyboard.LEFT)) && player.position.x > -25){
           player.body.velocity.x = -300;
         }
-        else if (this.keyboard.isDown(Phaser.Keyboard.D) && player.position.x < 815) {
+        else if ((this.keyboard.isDown(Phaser.Keyboard.D) || this.keyboard.isDown(Phaser.Keyboard.RIGHT)) && player.position.x < 815) {
           player.body.velocity.x = 300
         }
         else{
@@ -928,15 +928,6 @@ export default (game, Phaser) => ({
                   else{
                     direction = 1;
                   }
-                  let brick = bricks.children[j]
-                  let powerup = brick.powerup
-                  powerup.position.x = brick.position.x - 8
-                  powerup.position.y = brick.position.y
-                  powerup.body.velocity.y =(250 + Math.floor(Math.random() * 100)) * direction
-                  powerup.visible = true
-                  console.log("index is ", j);
-                  console.log("The brick being sent is ", brick);
-                  socket.emit('updatePowerupActivationToServer', [{index: j, brickx: brick.position.x - 8, bricky: brick.position.y, id: socket.id, direction: direction, roomNumber: this.game.state.states['playMultiplayer']._roomNumber}])
                 }
                 this.handleRemoveBricksFromScreen(this.bricks1.children[j], this.bricks2.children[j])
 
@@ -950,222 +941,3 @@ export default (game, Phaser) => ({
       }
     }
     })
-
-      //   if(this.player.stick){
-      //     this.ball.body.velocity.x = 0;
-      //     this.ball.body.velocity.y = 0;
-      //     this.ball.position.x = this.ball.position.oldx + this.player.position.x
-      //     this.ball.position.y = this.player.position.y + 35;
-      //   }
-
-      //   if((Date.now() - this.player.timeOf) >= 5000){
-      //     if(this.player.invincible){
-      //       this.player.invincible = false;
-      //     }
-      //     if(this.player.stick){
-      //       this.player.stick = false;
-      //       this.player.sticky = false;
-      //       this.ball.position.oldx = undefined;
-      //       this.ball.body.velocity.y = this.ball.body.velocity.oldy;
-      //       this.ball.body.velocity.x = this.ball.body.velocity.oldx;
-      //     }
-      //     if(this.player.bigPaddle){
-      //       this.player.scale.x = 1
-      //       this.player.bigPaddle = false;
-      //     }
-      //     if(this.player.smallPaddle){
-      //       this.player.scale.x = 1;
-      //       this.player.smallPaddle = false;
-      //     }
-      //     this.player.timeOf = undefined;
-      //   }
-      //
-      //   for(let i = 0; i < this.bricks.children.length; i++){
-      //     if (this.bricks.children[i].powerup !== undefined && this.bricks.children[i].powerup.visible){
-      //       if (this.bricks.children[i].powerup.position.y >= 630 && this.bricks.children[i].powerup.position.y < 635 &&
-      //         ((this.player.position.x + 15) < this.bricks.children[i].powerup.position.x) &&
-      //         ((this.player.position.x + 155) > this.bricks.children[i].powerup.position.x)){
-      //           this.bricks.children[i].powerup.body.velocity.y = 0;
-      //           this.bricks.children[i].powerup.position.y = 0;
-      //           this.bricks.children[i].powerup.position.x = -40;
-      //
-      //           if(this.bricks.children[i].powerup.type === "smallPaddle"){
-      //             if (this.bricks.children[i].powerup.type === "invincible"){
-      //               this.player.invincible = false;
-      //             }
-      //             if(this.bricks.children[i].powerup.type === "sticky"){
-      //               this.player.sticky = false;
-      //               this.player.stick = false;
-      //             }
-      //             if(this.bricks.children[i].powerup.type === "bigPaddle"){
-      //               this.player.bigPaddle = false;
-      //               this.player.scale.x = 1
-      //             }
-      //             this.player.smallPaddle = true;
-      //             this.player.scale.x = 0.5
-      //           }
-      //
-      //           if(!(this.player.smallPaddle)){
-      //             if(this.bricks.children[i].powerup.type === "invincible"){
-      //               if(this.player.stick){
-      //                 this.player.sticky = false;
-      //                 this.player.stick = false;
-      //               }
-      //               if(this.player.bigPaddle){
-      //                 this.player.bigPaddle = false;
-      //                 this.player.scale.x = 1;
-      //               }
-      //               this.player.invincible = true;
-      //             }
-      //             if(this.bricks.children[i].powerup.type === "sticky"){
-      //               if(this.player.invincible){
-      //                 this.player.invincible = false
-      //               }
-      //               if(this.player.bigPaddle){
-      //                 this.player.bigPaddle = false
-      //                 this.player.scale.x = 1;
-      //               }
-      //               this.player.sticky = true
-      //               this.ball.body.velocity.oldy = this.ball.body.velocity.y;
-      //               this.ball.body.velocity.oldx = this.ball.body.velocity.x;
-      //             }
-      //             if(this.bricks.children[i].powerup.type === "bigPaddle"){
-      //               if(this.player.sticky){
-      //                 this.player.sticky = false;
-      //                 this.player.stick = false;
-      //               }
-      //               if(this.player.invincible){
-      //                 this.player.invincible = false;
-      //               }
-      //               this.player.bigPaddle = true
-      //               this.player.position.x = this.player.position.x - 15
-      //               this.player.scale.x = 1.5
-      //             }
-      //           }
-      //           this.player.timeOf = Date.now()
-      //         }
-      //     }
-      //       if ((this.ball.position.x + 5 > (this.bricks.children[i].position.x -13)) && (this.ball.position.x-5 < (this.bricks.children[i].position.x + 15)) &&
-      //         (this.ball.position.y + 5 > (this.bricks.children[i].position.y - 3)) && (this.ball.position.y-5 < (this.bricks.children[i].position.y + 3))) {
-      //           if (this.bricks.children[i].powerup !== undefined){
-      //               this.bricks.children[i].powerup.position.x = this.bricks.children[i].position.x - 8
-      //               this.bricks.children[i].powerup.position.y = this.bricks.children[i].position.y
-      //               this.bricks.children[i].powerup.body.velocity.y = 250 + Math.floor(Math.random() * 100)
-      //               this.bricks.children[i].powerup.visible = true
-      //           }
-      //           this.bricks.children[i].position.x = -40;
-      //           if (!(this.player.invincible)){
-      //             this.ball.body.velocity.y = this.ball.body.velocity.y * -1
-      //           }
-      //       }
-      //   }
-      //
-      //   if(this.ball.position.y > 670){
-      //     game.state.start('lose')
-      //   }
-      //
-      //   if (this.ball.position.x + (this.ball.body.velocity.x / 20) < -5){
-      //     this.ball.body.velocity.x = -1 * this.ball.body.velocity.x;
-      //     this.ball.position.x += (this.ball.body.velocity.x / 20)
-      //   }
-      //   if(this.ball.position.x + (this.ball.body.velocity.x / 20) > 920){
-      //     this.ball.body.velocity.x = -1 * this.ball.body.velocity.x;
-      //     this.ball.position.x -= (this.ball.body.velocity.x / 20)
-      //   }
-      //
-      //
-      //   if((!(this.player.smallPaddle) && (this.ball.position.y >= 630 && this.ball.position.y < 635 &&
-      //     ((this.player.position.x + 15) < this.ball.position.x) &&
-      //     ((this.player.position.x + 145) > this.ball.position.x))) ||
-      //     (this.player.bigPaddle && (this.ball.position.y >= 630 && this.ball.position.y < 635 &&
-      //     ((this.player.position.x + 15) < this.ball.position.x) &&
-      //     ((this.player.position.x + 195) > this.ball.position.x))) ||
-      //     (this.player.smallPaddle && (this.ball.position.y >= 630 && this.ball.position.y < 635 &&
-      //     ((this.player.position.x + 10) < this.ball.position.x) &&
-      //     ((this.player.position.x + 60) > this.ball.position.x)))) {
-      //         this.ball.body.velocity.y = -1 * this.ball.body.velocity.y;
-      //         if(this.player.bigPaddle === false || this.player.bigPaddle === undefined && (this.player.smallPaddle === false || this.player.smallPaddle === undefined)){
-      //           this.ball.body.velocity.x = ((this.ball.position.x - (this.player.position.x + 70)) * 3)
-      //         }
-      //         else if(this.player.bigPaddle){
-      //           this.ball.body.velocity.x = ((this.ball.position.x - (this.player.position.x + 100)) * 3)
-      //         }
-      //         else if(this.player.smallPaddle){
-      //           this.ball.body.velocity.x = ((this.ball.position.x - (this.player.position.x + 30)) * 3)
-      //         }
-      //         this.ball.position.y -= 10;
-      //       if(this.player.sticky){
-      //         this.player.stick = true;
-      //         this.ball.position.oldx = (this.ball.position.x - (this.player.position.x))
-      //       }
-      //
-      //   }
-      //   if (this.ball.position.y < 0){
-      //     this.ball.body.velocity.y = -1 * this.ball.body.velocity.y;
-      //     this.ball.position.y += 10;
-      //   }
-      //   if(this.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && this.player.stick){
-      //     if(this.player.invincible){
-      //       this.player.invincible = false;
-      //     }
-      //     this.player.stick = false;
-      //     this.player.sticky = false;
-      //     this.ball.position.oldx = undefined;
-      //     this.ball.body.velocity.y = this.ball.body.velocity.oldy;
-      //     this.ball.body.velocity.x = this.ball.body.velocity.oldx;
-      //   }
-      //
-      //   let winStateBoolean = true;
-      //   for (let a = 0; a < this.bricks.length; a = a + 1){
-      //     if(this.bricks.children[a].position.x > 0){
-      //       winStateBoolean = false;
-      //     }
-      //   }
-      //   if(winStateBoolean){
-      //     game.state.start('win')
-      //   }
-      //
-      //   if(this.player.bigPaddle){
-      //     if (this.keyboard.isDown(Phaser.Keyboard.A) && this.player.position.x > -35){
-      //       this.player.body.velocity.x = -300;
-      //     }
-      //     else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 760) {
-      //       this.player.body.velocity.x = 300
-      //     }
-      //     else{
-      //       this.player.body.velocity.x = 0;
-      //     }
-      //   }
-      //
-      //   if(this.player.smallPaddle){
-      //     if (this.keyboard.isDown(Phaser.Keyboard.A) && this.player.position.x > -8){
-      //       this.player.body.velocity.x = -300;
-      //     }
-      //     else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 870) {
-      //       this.player.body.velocity.x = 300
-      //     }
-      //     else{
-      //       this.player.body.velocity.x = 0;
-      //     }
-      //   }
-      //
-      // if((this.player.bigPaddle === false || this.player.bigPaddle === undefined) && (this.player.smallPaddle === false || this.player.smallPaddle === undefined)){
-      //   if (this.keyboard.isDown(Phaser.Keyboard.A) && this.player.position.x > -25){
-      //     this.player.body.velocity.x = -300;
-      //   }
-      //   else if (this.keyboard.isDown(Phaser.Keyboard.D) && this.player.position.x < 815) {
-      //     this.player.body.velocity.x = 300
-      //   }
-      //   else{
-      //     this.player.body.velocity.x = 0;
-      //   }
-      // }
-      // },
-
-    //   Win: function() {
-    //     game.state.start('win');
-    //   }
-    // })
-    // }
-
-// const MainStateInstance = new Mainstate();

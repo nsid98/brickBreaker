@@ -570,6 +570,13 @@ update: function() {
     this.ball.body.velocity.x = this.ball.body.velocity.oldx;
   }
 
+  if(this.keyboard.isDown(Phaser.Keyboard.P)){
+    this.game.physics.arcade.isPaused = true
+  }
+  if(this.keyboard.isDown(Phaser.Keyboard.R)){
+    this.game.physics.arcade.isPaused = false 
+  }
+
   let winStateBoolean = true;
   for (let a = 0; a < this.bricks.length; a = a + 1){
     if(this.bricks.children[a].position.x > 0){

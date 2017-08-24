@@ -9,6 +9,7 @@ export default (game) => ({
     game.load.image('brick', './images/2.png')
     game.load.image('powerup', './images/powerup.png')
     game.load.image('instructions', './images/instructions.png')
+    game.load.image('border', './images/border1.jpg')
 },
   create: function() {
     game.state.start('menu');

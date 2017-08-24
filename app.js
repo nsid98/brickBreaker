@@ -26,9 +26,6 @@ app.set('port', port);
 
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
-// const socket = io
-
-// const io = require('socket.io').listen(server);
 let player1 = "bottomSide"
 let player2 = "topSide"
 let playerList = []
@@ -58,26 +55,24 @@ io.on('connection', function (socket) {
 
   socket.on('updatePlayer', function(data){
     io.to('room' + (data[0].roomNumber).toString()).emit('updatePlayerToClient', data)
-    // socket.broadcast.emit('updatePlayerToClient', data)
   })
 
   socket.on('updateBallToServer', function(data){
     io.to('room' + (data[0].roomNumber).toString()).emit('updateBall', data)
-    // socket.broadcast.emit('updateBall', data)
   })
 
   socket.on('updateBrickToServer', function(data){
     io.to('room' + (data[0].roomNumber).toString()).emit('updateBricks', data)
-    // socket.broadcast.emit('updateBricks', data)
   })
   socket.on('updatePowerupActivationToServer', function(data){
     io.to('room' + (data[0].roomNumber).toString()).emit('updatePowerups', data)
-    // socket.broadcast.emit('updatePowerups', data)
   })
 
   socket.on('sendBrickToServer', function(data){
     io.to('room' + (data[0].roomNumber).toString()).emit('sendBrick', data)
-    // socket.broadcast.emit('sendBrick', data)
+  })
+  socket.on('lose', function(data){
+    io.to('room' + (data[0].roomNumber).toString()).emit('sendLose', data)
   })
 
   socket.on('disconnect', function(socket){
