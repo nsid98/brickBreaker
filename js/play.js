@@ -505,7 +505,7 @@ update: function() {
           if (this.bricks.children[i].powerup !== undefined){
               this.bricks.children[i].powerup.position.x = this.bricks.children[i].position.x - 8
               this.bricks.children[i].powerup.position.y = this.bricks.children[i].position.y
-              this.bricks.children[i].powerup.body.velocity.y = 250 + Math.floor(Math.random() * 100)
+              this.bricks.children[i].powerup.body.velocity.y = 450 + Math.floor(Math.random() * 100)
               this.bricks.children[i].powerup.visible = true
           }
           this.bricks.children[i].position.x = -40;
@@ -574,7 +574,7 @@ update: function() {
     this.game.physics.arcade.isPaused = true
   }
   if(this.keyboard.isDown(Phaser.Keyboard.R)){
-    this.game.physics.arcade.isPaused = false 
+    this.game.physics.arcade.isPaused = false
   }
 
   let winStateBoolean = true;

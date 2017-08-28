@@ -1,8 +1,26 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: darkgrey
 }
 
 a {
   color: #00B7FF;
+}
+
+.gameDivContainer {
+  display: flex;
+  -webkit-align-items: center;
+  align-items: column;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+#gameDiv {
+
+}
+
+.developperName {
+  font: 40px "Lucida Grande", Helvetica, Arial, sans-serif;
+
 }

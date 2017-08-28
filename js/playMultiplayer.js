@@ -61,7 +61,7 @@ export default (game, Phaser) => ({
 
     socket.on('updateBall', ((data) =>{
 
-      if(this.game.state.states['playMultiplayer']._side === "topSide" && this.balls.children[data[0].index].position.y <= game.height){
+      if(this.game.state.states['playMultiplayer']._side === "bottomSide" && this.balls.children[data[0].index].position.y <= game.height){
           console.log("This is the ball the top player is updating, ball #", data[0].index);
           let ball = this.balls.children[data[0].index]
           ball.position.x = data[0].x;
@@ -69,7 +69,7 @@ export default (game, Phaser) => ({
           ball.body.velocity.x = data[0].vx;
           ball.body.velocity.y = data[0].vy;
       }
-      else if(this.game.state.states['playMultiplayer']._side === "bottomSide" && this.balls.children[data[0].index].position.y > game.height){
+      else if(this.game.state.states['playMultiplayer']._side === "topSide" && this.balls.children[data[0].index].position.y > game.height){
         console.log("This is the ball the bottom player is updating, ball #", data[0].index);
         let ball = this.balls.children[data[0].index]
         ball.position.x = data[0].x;

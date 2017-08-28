@@ -3,7 +3,7 @@ export default (game) => ({
     var loadingLabel = game.add.text(80, 150, 'loading...',
     {font: '30px Courier', fill: '#ffffff'})
     game.stage.disableVisibilityChange = true;
-    game.load.image('homeScreen', './images/HomeScreen1.png')
+    game.load.image('homeScreen', './images/Break Me.png')
     game.load.image('player', './images/65938.png');
     game.load.image('ball', './images/aqua-ball.png');
     game.load.image('brick', './images/2.png')
