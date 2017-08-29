@@ -1,7 +1,7 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: darkgrey
+  background-color: black
 }
 
 a {
@@ -19,8 +19,11 @@ a {
 #gameDiv {
 
 }
-
+.developperEmail {
+  color: white
+}
 .developperName {
+  color: white;
   font: 40px "Lucida Grande", Helvetica, Arial, sans-serif;
 
 }
