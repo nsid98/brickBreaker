@@ -61,7 +61,6 @@ export default (game, Phaser) => ({
     socket.on('updateBall', ((data) =>{
 
       if(this.game.state.states['playMultiplayer']._side === "bottomSide" && this.balls.children[data[0].index].position.y <= (game.height / 2)){
-          // console.log("This is the ball the top player is updating, ball #", data[0].index);
           let ball = this.balls.children[data[0].index]
           ball.position.x = data[0].x;
           ball.position.y = data[0].y;
@@ -69,7 +68,6 @@ export default (game, Phaser) => ({
           ball.body.velocity.y = data[0].vy;
       }
       else if(this.game.state.states['playMultiplayer']._side === "topSide" && this.balls.children[data[0].index].position.y > (game.height / 2)){
-        // console.log("This is the ball the bottom player is updating, ball #", data[0].index);
         let ball = this.balls.children[data[0].index]
         ball.position.x = data[0].x;
         ball.position.y = data[0].y;
@@ -747,7 +745,6 @@ export default (game, Phaser) => ({
             }
             game.physics.enable(this.bricks1, Phaser.Physics.ARCADE);
             for (let i = 0; i < this.bricks1.children.length; i ++){
-              console.log("Group 1 sent brick ", i);
               let powerup = null
               if (this.bricks1.children[this.bricks1.children.length - 1].powerup != undefined){
                 powerup = this.bricks1.children[this.bricks1.children.length - 1].powerup.type
@@ -759,8 +756,6 @@ export default (game, Phaser) => ({
             }
             game.physics.enable(this.bricks2, Phaser.Physics.ARCADE);
             for (let i = 0; i < this.bricks2.children.length; i ++){
-              console.log("Group 2 sent brick ", i);
-
               let powerup = null
               if (this.bricks2.children[this.bricks2.children.length - 1].powerup != undefined){
                 powerup = this.bricks2.children[this.bricks2.children.length - 1].powerup.type
