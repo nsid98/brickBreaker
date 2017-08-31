@@ -35,12 +35,9 @@ export default (game, Phaser) => ({
         let x = data[0].brickx;
         let y = data[0].bricky;
         let powerup = data[0].powerup
-        console.log("line 38", data[0]);
-
         if(data[0].key === "1"){
           this.bricks1.create(x, y, 'brick')
           this.bricks1.children[this.bricks1.children.length -1].scale.setTo(0.04, 0.025)
-          console.log("Group 1 Brick ", this.bricks1.children.length);
           if (powerup != null){
             this.bricks1.children[this.bricks1.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup')
             this.bricks1.children[this.bricks1.children.length - 1].powerup.scale.setTo(0.1, 0.1);
@@ -51,7 +48,6 @@ export default (game, Phaser) => ({
         if(data[0].key === "2"){
           this.bricks2.create(x, y, 'brick')
           this.bricks2.children[this.bricks2.children.length -1].scale.setTo(0.04, 0.025)
-          console.log("Group 2 Brick ", this.bricks2.children.length);
           if (powerup != null){
             this.bricks2.children[this.bricks2.children.length - 1].powerup = game.add.sprite(0, 0, 'powerup')
             this.bricks2.children[this.bricks2.children.length - 1].powerup.scale.setTo(0.1, 0.1);
@@ -902,10 +898,10 @@ export default (game, Phaser) => ({
         if(this.bricks1.children.length >= 212 && this.bricks2.children.length >=212 && (ball.body.velocity.x == 0 || ball.body.velocity.y == 0)){
           ball.body.velocity.x = 100 + (Math.random() * 100);
           if(player.position.y > 400){
-            ball.body.velocity.y = 270;
+            ball.body.velocity.y = 100;
           }
           else{
-            ball.body.velocity.y = -270;
+            ball.body.velocity.y = -100;
           }
         }
 
