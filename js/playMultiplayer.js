@@ -791,9 +791,17 @@ export default (game, Phaser) => ({
             this.movePaddle(this.player)
           }
         }
-        this.updateBall(this.balls, this.player, this.bricks1)
-        this.updateBall(this.balls, this.otherPlayer, this.bricks2)
-        // this.checkIfPowerupHitPlayer()
+        for(let i = 0; i < 2; i++){
+          let ball = this.balls.children[i]
+          if(this.game.state.states['playMultiplayer']._side === "bottomSide" && ball.position.y >= (game.height / 2)){
+            this.updateBall(ball, this.player, this.bricks1, i)
+            this.updateBall(ball, this.player, this.bricks2, i)
+          }
+          if(this.game.state.states['playMultiplayer']._side === "topSide" && ball.position.y < (game.height / 2)){
+            this.updateBall(ball, this.otherPlayer, this.bricks1, i)
+            this.updateBall(ball, this.otherPlayer, this.bricks2, i)
+          }
+        }
       },
 
       checkIfPowerupHitPlayer(){
@@ -890,10 +898,7 @@ export default (game, Phaser) => ({
         socket.emit('updatePlayer', [{x: player.position.x, y: player.position.y, vx: player.body.velocity.x, vy: player.body.velocity.y, id: socket.id, roomNumber: this.game.state.states['playMultiplayer']._roomNumber}])
       },
 
-      updateBall: function(balls, player, bricks){
-        let ball = null
-        for(let i = 0; i < balls.children.length; i ++){
-          ball = balls.children[i]
+      updateBall: function(ball, player, bricks, i){
         if(this.bricks1.children.length >= 212 && this.bricks2.children.length >=212 && (ball.body.velocity.x == 0 || ball.body.velocity.y == 0)){
           ball.body.velocity.x = 100 + (Math.random() * 100);
           if(player.position.y > 400){
@@ -947,6 +952,6 @@ export default (game, Phaser) => ({
         }
         // console.log("socket sent on updateBallToServer is ", socket.id);
         socket.emit('updateBallToServer', [{index: i, x: ball.position.x, y: ball.position.y, vx: ball.body.velocity.x, vy: ball.body.velocity.y, id: socket.id, roomNumber: this.game.state.states['playMultiplayer']._roomNumber}])
-      }
+
     }
     })
