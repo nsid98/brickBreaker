@@ -13,11 +13,10 @@ export default (game, Phaser) => ({
     {font: '25px Arial', fill: '#ffffff'})
 
     game.input.onDown.add(function() {
-      console.log(game.input.mousePointer.x);
-      console.log(game.input.mousePointer.y);
 
       if(game.input.mousePointer.x >= 80 && game.input.mousePointer.x < 535 && game.input.mousePointer.y >= 605 && game.input.mousePointer.y < 625){
         game.state.start('menu')
+        location.reload()
       }
     })
   },

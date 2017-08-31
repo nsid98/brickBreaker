@@ -893,10 +893,10 @@ export default (game, Phaser) => ({
         if(this.bricks1.children.length >= 212 && this.bricks2.children.length >=212 && (ball.body.velocity.x == 0 || ball.body.velocity.y == 0)){
           ball.body.velocity.x = 100 + (Math.random() * 100);
           if(player.position.y > 400){
-            ball.body.velocity.y = 100;
+            ball.body.velocity.y = 200;
           }
           else{
-            ball.body.velocity.y = -100;
+            ball.body.velocity.y = -200;
           }
         }
 
